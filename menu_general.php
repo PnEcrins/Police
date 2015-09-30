@@ -3,6 +3,7 @@
 
 <?
 $an = date("Y");
+require("conf/parametres.php");
 ?>
 
 <div id="conteneur">
@@ -23,13 +24,13 @@ $an = date("Y");
                                 SELECT u.id_role, u.nom_role, u.prenom_role, c.id_droit
                                 FROM utilisateurs.t_roles u
                                 JOIN utilisateurs.cor_role_droit_application c ON c.id_role = u.id_role
-                                WHERE u.id_role = ".$_SESSION['xauthor']." AND c.id_application = 3
+                                WHERE u.id_role = ".$_SESSION['xauthor']." AND c.id_application = ".$id_application."
                                 union
                                 SELECT u.id_role, u.nom_role, u.prenom_role, c.id_droit
                                 FROM utilisateurs.t_roles u
                                 JOIN utilisateurs.cor_roles g ON g.id_role_utilisateur = u.id_role
                                 JOIN utilisateurs.cor_role_droit_application c ON c.id_role = g.id_role_groupe
-                                WHERE u.id_role = ".$_SESSION['xauthor']." AND c.id_application = 3
+                                WHERE u.id_role = ".$_SESSION['xauthor']." AND c.id_application = ".$id_application."
                                 ) as a
                                 GROUP BY a.id_role, a.nom_role, a.prenom_role
                             ) AS b

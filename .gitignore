@@ -1,0 +1,7 @@
+*.*~
+conf/connecter.php
+conf/parametres.php
+documents/bilans/*.*
+documents/instructions/*.*
+documents/mementos/*.*
+documents/modeles/*.*
