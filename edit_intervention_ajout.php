@@ -59,6 +59,7 @@ else {
 		<? } elseif ($outil_carto == "ol") { ?>
 		<script type="text/javascript" src="js/application.ol.js"></script>
 		<script type="text/javascript" src="js/openlayers/OpenLayers.js"></script>
+        <script type="text/javascript" src="conf/parametres_wms.js"></script>
 		<? } ?>
 		  
 	<title>Police du <? echo $etablissement_abv; ?> - Ajouter une intervention</title>

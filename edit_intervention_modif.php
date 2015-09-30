@@ -79,8 +79,8 @@ else {
 		<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
 		
 		<!-- Facebox pour afficher des popups en javascript -->
-		<link rel="stylesheet" href="facebox/facebox.css" media="screen" type="text/css" />
-		<script type="text/javascript" src="facebox/facebox.js"></script>
+		<link rel="stylesheet" href="js/facebox/facebox.css" media="screen" type="text/css" />
+		<script type="text/javascript" src="js/facebox/facebox.js"></script>
 		<script type="text/javascript">
 		    jQuery(document).ready(function($) {
 		      $('a[rel*=facebox]').facebox() 
@@ -120,6 +120,7 @@ else {
 		<? } elseif ($outil_carto == "ol") { ?>
 			<script type="text/javascript" src="js/application.ol.js"></script>
 			<script type="text/javascript" src="js/openlayers/OpenLayers.js"></script>
+            <script type="text/javascript" src="conf/parametres_wms.js"></script>
 		<? } ?>
   
 	<title>Police du <? echo $etablissement_abv; ?> - Modifier une intervention</title>

@@ -3,4 +3,5 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="Content-Language" content="fr" />
-	<link href="<?= $racine;?>styles.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="<?= $racine;?>css/styles.css" rel="stylesheet" type="text/css" media="screen" />
+    <script src="js/proj4js/lib/proj4js.js" type="text/javascript"></script>

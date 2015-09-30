@@ -1,6 +1,9 @@
-create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,marqueur) {
 
+
+create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,marqueur) {
+    
 	var createMap = function(zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY) {
+        
 		//Variable pour les options de la map
 		//Avec la taille (maxExtent), la projection
 		var options = {
@@ -14,30 +17,24 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
 		this.fonds = new OpenLayers.Layer.WMS(
 			"fonds"
 			,wmsUrl
-			,{layers: 'fonds'}
+			,{layers: wms_fonds}
 			,{isBaseLayer: true}
 		);
-        // this.orthotms = new OpenLayers.Layer.TMS(
-			// "MTS pne"
-			// ,'http://5.135.42.177/rastercache/tms/'
-			// ,{layersname: 'Orthopne_EPSG2154'tileSize: new Openlayers.Size(256,256), type:'jpeg', }
-			// ,{isBaseLayer: true}
-		// );
 		this.coeur = new OpenLayers.Layer.WMS(
 			"coeur"
 			,wmsUrl
-			,{layers: 'coeur',transparent: 'true'}
+			,{layers: wms_coeur,transparent: 'true'}
 			,{isBaseLayer: false}
 		);
 		this.reserves = new OpenLayers.Layer.WMS(
 			"reserves"
 			,wmsUrl
-			,{layers: 'reserves',transparent: 'true'}
+			,{layers: wms_reserves,transparent: 'true'}
 			,{isBaseLayer: false}
 		);
 		this.carte = new OpenLayers.Map('map_1',options);
 
-		carte.addLayers([ fonds, reserves, coeur]);
+		carte.addLayers([fonds, reserves, coeur]);
 
 		return carte;
 	};
@@ -100,13 +97,19 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
 		document.getElementById('fcomm').value = val1 ;
 		document.getElementById('fsect').value = val5 ;
 		document.getElementById('fstatut').value = val2 ;
-		document.getElementById('longEnd').value = val3 ;
+		// document.getElementById('longEnd').value = val3 ;
+		// document.getElementById('latEnd').value = val4 ;
+        document.getElementById('longEnd').value = val3 ;
 		document.getElementById('latEnd').value = val4 ;
+        document.getElementById('commentairex').innerHTML = ' - Saisir vos coordonnées en degrés décimaux ou cliquer sur la carte' ;
+        document.getElementById('commentairey').innerHTML = ' - Saisir vos coordonnées en degrés décimaux  ou cliquer sur la carte' ;
 	}
 	
 
 	return{
 		init: function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,marqueur){
+            this.testmove = true;
+            
 			createMap(zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY);
 			var interventionsStyle= new OpenLayers.StyleMap({
 				"default": new OpenLayers.Style({
@@ -128,26 +131,93 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
 			})
 			this.intervention = new OpenLayers.Layer.Vector("intervention",{styleMap: interventionsStyle,rendererOptions: {zIndexing: true} });
 			carte.addLayer(this.intervention);
-			var point = new OpenLayers.Geometry.Point(xCentre,yCentre);
-			var pointFeature = new OpenLayers.Feature.Vector(point,null);
-			this.intervention.addFeatures(pointFeature);
-			
-			// Si la variable marqueur est �gale � true, alors le marqueur est d�placable.
-			if (marqueur == true) {
-				var drag = new OpenLayers.Control.DragFeature(this.intervention);
-				carte.addControl(drag);
-				drag.activate();
-				
-				drag.onComplete= function() {
-					var x = pointFeature.geometry.x;
-					var y = pointFeature.geometry.y;
-					var qstr = 'x=' + escape(x) + '&y=' + escape(y);
-					getTerritoire("ajax_return_territoire.php", qstr);
-				}
-			}
+            this.intervention.events.on({
+                        featureadded: function(obj) {
+                            var feature = obj.feature;
+                            // if(map.getZoom()<15){
+                                // this.intervention.removeFeatures(feature);
+                                // return false; //la fonction s'arrête là
+                            // }
+                            if(create_ol.intervention.features[1]){create_ol.intervention.removeFeatures(create_ol.intervention.features[0])};//s'il y a déjà une géométrie, on la supprime pour ne garder que celle qui vient d'être ajoutée
+                            var x = feature.geometry.x;
+                            var y = feature.geometry.y;
+                            var qstr = 'x=' + escape(x) + '&y=' + escape(y);
+                            getTerritoire("ajax_return_territoire.php", qstr);
+                        }
+                        ,featuremodified: function(obj) {
 
-			carte.setCenter(new OpenLayers.LonLat(xCentre,yCentre),zoom,false,true);
+                        }
+                        ,featureremoved: function(obj) {
+
+                        }
+                    });
+            
+            OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
+                defaultHandlerOptions: {
+                    'single': true,
+                    'double': false,
+                    'pixelTolerance': 0,
+                    'stopSingle': false,
+                    'stopDouble': false
+                },
+
+                initialize: function(options) {
+                    this.handlerOptions = OpenLayers.Util.extend(
+                        {}, this.defaultHandlerOptions
+                    );
+                    OpenLayers.Control.prototype.initialize.apply(
+                        this, arguments
+                    ); 
+                    this.handler = new OpenLayers.Handler.Click(
+                        this, {
+                            'click': this.trigger
+                        }, this.handlerOptions
+                    );
+                }, 
+
+                trigger: function(e) {
+                    var lonlat = carte.getLonLatFromPixel(e.xy);
+                    var point = new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
+                    var pointFeature = new OpenLayers.Feature.Vector(point,null);
+                    create_ol.intervention.addFeatures(pointFeature);
+                    // if(this.intervention.features[1]){this.intervention.removeFeatures(this.intervention.features[0])};//s'il y a déjà une géométrie, on la supprime pour ne garder que celle qui vient d'être ajoutée
+                    
+                    // alert("You clicked near " + lonlat.lat + " N, " +
+                                              // + lonlat.lon + " E");
+                }
+
+            });
+            var click = new OpenLayers.Control.Click();
+            carte.addControl(click);
+            click.activate();
+            
+            carte.setCenter(new OpenLayers.LonLat(xCentre,yCentre),zoom,false,true);
 		}
+        ,putPoint: function(wms_proj,minX,minY,maxX,maxY){
+            var proj_appli = new OpenLayers.Projection("EPSG:"+wms_proj);
+            var projSource = new OpenLayers.Projection("EPSG:4326");
+            var projDestination = carte.getProjectionObject();
+            var monx = parseFloat(document.getElementById('longEnd').value);
+            var mony = parseFloat(document.getElementById('latEnd').value);
+            // on teste si les coordonnées fournie sont dans ls borne minX,minY,maxX,maxY fourni dans conf/paramatres.php
+            var monPoint4326 = new OpenLayers.Geometry.Point(monx,mony);
+            OpenLayers.Projection.transform(monPoint4326,projSource,proj_appli);
+            if(monPoint4326.x < minX || monPoint4326.x > maxX || monPoint4326.x==null || isNaN(monPoint4326.x)){
+                document.getElementById('commentairex').innerHTML = 'Coordonées en X non valide ou hors zone autorisée' ;
+                return false;
+            }
+            if(monPoint4326.y < minY || monPoint4326.y > maxY || monPoint4326.y==null || isNaN(monPoint4326.y)){
+                document.getElementById('commentairey').innerHTML = 'Coordonées en X non valide ou hors zone autorisée' ;
+                return false;
+            }
+            // on construit le point, on le transforme dans la proj de la carte et on l'ajout
+            // l'évenement featureadded sur la layer gère la suppression du point éventuellement existant
+            var point = new OpenLayers.Geometry.Point(monx,mony);
+            OpenLayers.Projection.transform(point,projSource,projDestination);
+            var pointFeature = new OpenLayers.Feature.Vector(point,null);
+            create_ol.intervention.addFeatures(pointFeature);
+            
+        }
 	}
 	
 }();

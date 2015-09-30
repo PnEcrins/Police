@@ -1,16 +1,10 @@
-<? include "verification.php" ?>
-<?php
-//if ($_POST['Submit'] == "OK")
-if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
-{
-$cartoannee= $_POST[fcartoannee];
-header("Location: carto.php?an=$cartoannee");
-}
-?>	
-		<? include "header_front.php" ?>
-		<link rel="stylesheet" href="facebox/facebox.css" media="screen" type="text/css" />
+<? include "verification.php" ; ?>
+<? include "intervention_recherche_where.php" ; ?>
+
+		<? include "header_front.php" ; ?>
+		<link rel="stylesheet" href="js/facebox/facebox.css" media="screen" type="text/css" />
 		<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
-		<script type="text/javascript" src="facebox/facebox.js"></script>
+		<script type="text/javascript" src="js/facebox/facebox.js"></script>
 		<script type="text/javascript">
 		    jQuery(document).ready(function($) {
 		      $('a[rel*=facebox]').facebox() 
@@ -20,6 +14,7 @@ header("Location: carto.php?an=$cartoannee");
 			<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<? echo $googlekeymap; ?>"></script>
 		<? } elseif ($outil_carto == "ol") { ?>
 			<script type="text/javascript" src="js/openlayers/OpenLayers.js"></script>
+			<script type="text/javascript" src="conf/parametres_wms.js"></script>
 		<? } ?>
 	<title>Police du <? echo $etablissement_abv; ?> - Localisation des interventions</title>
 </head>
@@ -34,42 +29,48 @@ header("Location: carto.php?an=$cartoannee");
 
 <? include "menu_general.php" ?>
 
-<?php
-//Declarer la requete listant les enregistrements de la table à lister,
-	$sqliste = "SELECT id_intervention, extract(year from date) as annee
-	FROM interventions.t_interventions
-	WHERE extract(year from date)= '$_GET[an]'";
-	//Executer la requete
-	$resultliste = pg_query($sqliste) or die ('Échec requête : ' . pg_last_error()) ;
-	//Compter le nombre d'enregistrements renvoyés par la requete
-	$nombreint = pg_numrows($resultliste);
-	$annee = $_GET[an];
-?>
-
-		<form action = "carto.php" method = "POST" name = "carto">
-			<div id="news"><h1>Localisation des <? echo "$nombreint"?> interventions de <? echo "$annee"?></h1>
-				<p class="texte">Afficher une autre ann&eacute;e :
-					<select name="fcartoannee">
-						<option value="">...</option>
-							<?
-								//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liée pour renseigner la liste déroulante
-								$sql_an = "SELECT distinct extract(year from date) as annee
-								FROM interventions.t_interventions
-								ORDER BY extract(year from date)";
-								$resultan = pg_query($sql_an) or die ("Erreur requête") ;
-								while ($val = pg_fetch_assoc($resultan)){
-							?>
-												<!--  Stocker l'id correspondant à la valeur selectionnée. Selectionner par défaut la valeur correspondant à l'enregistrement à modifier  -->
-						<option value="<?=$val['annee'];?>"><?=$val['annee']?></option>
-						<? } ?>
-					</select>
-					<input name="Submit" type="submit" value="OK" >
-				</p>
+           	<div id="news">
+				<h1>
+					Liste des interventions trouv&eacute;es (<? echo "$nombreint"?>) | 
+					<a href="interventions_liste.php">
+						<img src="images/icones/retour.gif" align="absmiddle" alt="Retour &agrave; la liste compl&egrave;te des interventions" title = "Retour &agrave; la liste compl&egrave;te des interventions" border = "0"/>
+					</a>
+				</h1>
 			</div>
-		</form>
+			
+			Votre recherche : 
+			<?if ($num != null){ ?>
+				<span class="commentaire">N&deg; de l'intervention :</span> <? echo "$num"?> - 
+			<?}?>
+			<?if ($infr != null){ ?>
+				<span class="commentaire">Type d'infraction :</span> <? echo "$nominfraction"?> - 
+			<?}?>
+			<?if ($type != null){ ?>
+				<span class="commentaire">Type d'intervention :</span> <? echo "$typeint"?> - 
+			<?}?>
+			<?if ($sect != null){ ?>
+				<span class="commentaire">Secteur :</span> <? echo "$nomsecteur"?> - 
+			<?}?>
+			<?if ($com != null){ ?>
+				<span class="commentaire">Commune :</span> <? echo "$nomcom"?> - 
+			<?}?>
+			<?if ($statut != null){ ?>
+				<span class="commentaire">Statut de la zone :</span> <? echo "$nomstatut"?> - 
+			<?}?>
+			<?if ($agent != null){ ?>
+				<span class="commentaire">Agent :</span> <? echo "$nomagent"?> - 
+			<?}?>
+			<?if ($date != null){ ?>
+				<span class="commentaire">Annee :</span> <? echo "$date"?>
+			<?}?>
+			
 			<div class="clear"></div>
-
-				<? include "carto/localisation-all.php" ?>
+			
+			<a href="intervention_recherche.php?from=carte&num=<?=$num;?>&infraction=<?=$infr;?>&type=<?=$type;?>&secteur=<?=$sect;?>&commune=<?=$com;?>&statut=<?=$statut;?>&agent=<?=$agent;?>&annee=<?=$date;?>" rel="facebox">
+				<img src="images/icones/rechercher.gif" alt="Rechercher une ou des intervention(s)" title="Rechercher une intervention" border="0" align="absmiddle"> Rechercher une ou des intervention(s)
+			</a>
+				
+				<? include "carto/localisation-all.php" ; ?>
 				
 				<? if ($outil_carto == "gm") { ?>
 					<p>

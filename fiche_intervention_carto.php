@@ -7,6 +7,7 @@
 	<? } elseif ($outil_carto == "ol") { ?>
 		<script type="text/javascript" src="js/application.ol.js"></script>
 		<script type="text/javascript" src="js/openlayers/OpenLayers.js"></script>
+        <script type="text/javascript" src="conf/parametres_wms.js"></script>
 	<? } ?>
 </head>
 
@@ -86,7 +87,8 @@
 	<p>
 		<span class="commentaire">Infraction(s) :</span>
 		<?
-			$query = "SELECT id_intervention, infraction, qualification FROM interventions.t_interventions
+			$query = "SELECT id_intervention, infraction, qualification 
+            FROM interventions.t_interventions
 			JOIN interventions.cor_interventions_infractions ON intervention_id = id_intervention
 			LEFT JOIN interventions.bib_infractions ON id_infraction = infraction_id
 			LEFT JOIN interventions.bib_qualification ON id_qualification = qualification_id
@@ -124,11 +126,12 @@
 	<hr color="#dcdcdc" > 
 	<p>
 		<?
-			$query = "SELECT id_intervention, nomutilisateur, prenomutilisateur FROM interventions.t_interventions
-			JOIN interventions.cor_interventions_agents ON intervention_id = id_intervention
-			JOIN interventions.bib_agents ON id_utilisateur = utilisateur_id
-			WHERE id_intervention = '$id'
-			ORDER BY nomutilisateur";
+			$query = "SELECT i.id_intervention, u.nom_role AS nomutilisateur, u.prenom_role AS prenomutilisateur 
+            FROM interventions.t_interventions i
+			JOIN interventions.cor_interventions_agents cia ON cia.intervention_id = i.id_intervention
+			JOIN utilisateurs.t_roles u ON u.id_role = cia.utilisateur_id
+			WHERE i.id_intervention = '$id'
+			ORDER BY u.nom_role";
 			//Executer la requete
 			$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 			//Compter le nombre d'enregistrements renvoyés par la requete
@@ -225,14 +228,33 @@
 	<? $ajd = date("d/m/Y"); ?>
 	<?php
 		//Declarer la requete listant les enregistrements de la table à lister,
-			$query = "SELECT * FROM interventions.bib_agents
+			$query = "SELECT * FROM utilisateurs.t_roles u
 			LEFT JOIN interventions.bib_droits ON id_droit = droit_id
-			WHERE id_utilisateur = '".$_SESSION['xauthor']."'  ";
+			WHERE id_role = '".$_SESSION['xauthor']."'  ";
+            $query = "			
+                    SELECT b.* FROM
+                    (
+                        SELECT a.id_role, a.nom_role, a.prenom_role, max(a.id_droit) as id_droit
+                        FROM 
+                        (
+                        SELECT u.id_role, u.nom_role, u.prenom_role, c.id_droit
+                        FROM utilisateurs.t_roles u
+                        JOIN utilisateurs.cor_role_droit_application c ON c.id_role = u.id_role
+                        WHERE u.id_role = ".$_SESSION['xauthor']." AND c.id_application = ".$id_application."
+                        union
+                        SELECT u.id_role, u.nom_role, u.prenom_role, c.id_droit
+                        FROM utilisateurs.t_roles u
+                        JOIN utilisateurs.cor_roles g ON g.id_role_utilisateur = u.id_role
+                        JOIN utilisateurs.cor_role_droit_application c ON c.id_role = g.id_role_groupe
+                        WHERE u.id_role = ".$_SESSION['xauthor']." AND c.id_application = ".$id_application."
+                        ) as a
+                        GROUP BY a.id_role, a.nom_role, a.prenom_role
+                    ) AS b";
 			//Executer la requete
 			$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 			$val = pg_fetch_assoc($result);
-			$nom = $val['nomutilisateur'];
-			$prenom = $val['prenomutilisateur'];
+			$nom = $val['nom_role'];
+			$prenom = $val['prenom_role'];
 	?>
 	<hr color="#dcdcdc" > 
 	<p class="droite">

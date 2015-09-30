@@ -28,7 +28,8 @@ function load() {
 	
 	<?
 	// Lister les interventions de l'année en question
-	$query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat  FROM interventions.t_interventions WHERE extract(year from date)= '$_GET[an]'" ; 
+	$query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat  FROM interventions.t_interventions
+    $where" ; 
 	//Executer la requete
 	$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 	$i = '1'
@@ -88,8 +89,9 @@ function load() {
 	//selectionner toutes les intervantions avec leur géometries
 	$query = "SELECT *, st_asgeojson(st_transform(SETSRID(MakePoint(coord_x, coord_y),4326), '$wms_proj')) as geojson,to_char(date, 'dd/mm/yyyy') as dat  
 		FROM interventions.t_interventions int
-		LEFT JOIN interventions.bib_types_interventions typ ON typ.id_type_intervention = int.type_intervention_id
-		WHERE extract(year from int.date)= '$_GET[an]'" ; 
+		LEFT JOIN interventions.bib_types_interventions typ ON typ.id_type_intervention = int.type_intervention_id 
+        $where" ;
+		// WHERE extract(year from int.date)= '$cartoannee'" ; 
 		$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 	//bouble sur les interventions
 	 while ($val = pg_fetch_assoc($result)){
@@ -139,19 +141,19 @@ function load() {
 		this.fonds = new OpenLayers.Layer.WMS(
 			"fonds"
 			,wmsUrl
-			,{layers: 'fonds'}
+			,{layers: wms_fonds}
 			,{isBaseLayer: true}
 		);
 		this.coeur = new OpenLayers.Layer.WMS(
 			"coeur"
 			,wmsUrl
-			,{layers: 'coeur',transparent: 'true'}
+			,{layers: wms_coeur,transparent: 'true'}
 			,{isBaseLayer: false}
 		);
 		this.reserves = new OpenLayers.Layer.WMS(
 			"reserves"
 			,wmsUrl
-			,{layers: 'reserves',transparent: 'true'}
+			,{layers: wms_reserves,transparent: 'true'}
 			,{isBaseLayer: false}
 		);
 

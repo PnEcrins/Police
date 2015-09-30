@@ -97,11 +97,12 @@
 	<hr color="#dcdcdc" > 
 	<p>
 		<?
-			$query = "SELECT id_intervention, nomutilisateur, prenomutilisateur FROM interventions.t_interventions
-			JOIN interventions.cor_interventions_agents ON intervention_id = id_intervention
-			JOIN interventions.bib_agents ON id_utilisateur = utilisateur_id
-			WHERE id_intervention = '$id'
-			ORDER BY nomutilisateur";
+			$query = "SELECT i.id_intervention, u.nom_role AS nomutilisateur, u.prenom_role AS prenomutilisateur 
+            FROM interventions.t_interventions i
+			JOIN interventions.cor_interventions_agents cia ON cia.intervention_id = i.id_intervention
+			JOIN utilisateurs.t_roles u ON u.id_role = cia.utilisateur_id
+			WHERE i.id_intervention = '$id'
+			ORDER BY u.nom_role";
 			//Executer la requete
 			$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 			//Compter le nombre d'enregistrements renvoyés par la requete

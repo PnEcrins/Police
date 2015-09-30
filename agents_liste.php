@@ -1,8 +1,8 @@
 <? include "verification.php" ?>
 <? include "header_front.php" ?>
-		<link rel="stylesheet" href="facebox/facebox.css" media="screen" type="text/css" />
+		<link rel="stylesheet" href="js/facebox/facebox.css" media="screen" type="text/css" />
 		<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
-		<script type="text/javascript" src="facebox/facebox.js"></script>
+		<script type="text/javascript" src="js/facebox/facebox.js"></script>
 		<script type="text/javascript">
 		    jQuery(document).ready(function($) {
 		      $('a[rel*=facebox]').facebox() 

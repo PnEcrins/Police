@@ -28,6 +28,8 @@ $ref_ajout_agent = "non";
 $ref_edit_agent = "non";
 // Permettre au référent de réinitialiser le mot de passe des agents. Valeurs possibles : oui OU non
 $ref_mdp_agent = "non";
+// Permettre à tous les utilisateurs d'accéder à la rubrique DOCUMENTS mettant à disposition des documents de référence concernant la mission POLICE. Valeurs possibles : oui OU non
+$acces_documents = "oui";
 // Nombre d'interventions affichées par page. 
 $limite = 30;
 
@@ -51,10 +53,10 @@ $gm_y_center = "44.85";
 //URL du serveur WMS
 $wms_url = "http://mondomaine.fr/wms?";
 //Projection utilisée au format EPSG (27572 pour du lambert 2 étendu, 2154 pour du lambert 93, 4326 pour du WGS84, ...)
-$wms_proj = "27572";
+$wms_proj = 27572;
 //Coordonnées du centre du territoire dans la projection définie précédemment
-$ol_x_center = "914901";
-$ol_y_center = "1986895";
+$ol_x_center = 914901;
+$ol_y_center = 1986895;
 //Etendu du territoire dans la projection définie précédemment
 $min_x = 870000 ;
 $max_x = 950000 ;
