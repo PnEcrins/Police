@@ -18,12 +18,18 @@ Configuration de l'application
 	
 	    cp conf/connecter.php.sample conf/connecter.php
         
-* Copier et renommer le fichier ``conf/connecter.php.sample`` en ``conf/parametres.php`` :
+* Copier et renommer le fichier ``conf/parametres.php.sample`` en ``conf/parametres.php`` :
 
     :: 
 	
 	    cp conf/parametres.php.sample conf/parametres.php
 
+* Copier et renommer le fichier ``documents_liste.php.sample`` en ``documents_liste.php`` :
+
+    :: 
+	
+	    cp documents_liste.php.sample documents_liste.php
+        
 * Mettre à jour le fichier ``conf/connecter.php`` avec vos paramètres de connexion à la BDD :
 
     :: 
@@ -35,6 +41,12 @@ Configuration de l'application
     :: 
 	
 	    nano conf/parametres.php
+        
+* Mettre à jour le fichier ``documents_liste.php`` avec vos paramètres de connexion à la BDD :
+
+    :: 
+	
+	    nano documents_liste.php
         
 
    
