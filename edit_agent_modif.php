@@ -1,4 +1,5 @@
 <? include "verification.php" ?>
+<? include "conf/parametres.php" ?>
 <?php
 //if ($_POST['Submit'] == "OK")
 if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
@@ -7,17 +8,22 @@ if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 $prenomutilisateur = pg_escape_string($_POST[fprenom]);
 $nomutilisateur = pg_escape_string($_POST[fnom]);
 $organisme = pg_escape_string($_POST[forganisme]);
-$query= "UPDATE interventions.bib_agents SET
-	prenomutilisateur = '$prenomutilisateur', 
-	nomutilisateur = '$nomutilisateur', 
+$query= "UPDATE utilisateurs.t_roles SET
+	prenom_role = '$prenomutilisateur', 
+	nom_role = '$nomutilisateur', 
 	organisme = '$organisme', 
 	email = '$_POST[femail]', 
-	login = '$_POST[flogin]',
-	droit_id = '$_POST[fdroits]',
-	assermentes = '$_POST[fassermente]',
-	enposte = '$_POST[fenposte]'
-		WHERE id_utilisateur = '$_GET[id]'";
+	identifiant = '$_POST[flogin]'
+    WHERE id_role = '$_GET[id]'";
+pg_query($query) or die( "Erreur requete" );
+//suppression de la donnée dans la table de correspondance de gestion des droits
+$query= "DELETE FROM utilisateurs.cor_role_droit_application 
+         WHERE id_role = $_GET[id] AND id_application = $id_application ";
+pg_query($query) or die( "Erreur requete" );
 
+//ajout de la donnée dans la table de correspondance de gestion des droits
+$query= "INSERT INTO utilisateurs.cor_role_droit_application(id_role,id_droit,id_application) 
+         VALUES($_GET[id],$_POST[fdroits],$id_application)";
 pg_query($query) or die( "Erreur requete" );
 
 pg_close($dbconn);
@@ -41,21 +47,19 @@ else {
 </head>
 <?
 $query = "SELECT *
-	FROM interventions.bib_agents
-	WHERE id_utilisateur = '$_GET[id]'" ; 
+	FROM interventions.vue_agents
+	WHERE id_role = '$_GET[id]'" ; 
 	//Executer la requete
 	$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 
 	$val = pg_fetch_array($result) ;
-		$id = $val['id_utilisateur'];
-		$prenom = $val['prenomutilisateur'];
-		$nom = $val['nomutilisateur'];
+		$id = $val['id_role'];
+		$prenom = $val['prenom_role'];
+		$nom = $val['nom_role'];
 		$organisme = $val['organisme'];
 		$email = $val['email'];
-		$login = $val['login'];
-		$droit = $val['droit_id'];
-		$assermente = $val['assermentes'];
-		$enposte = $val['enposte'];
+		$login = $val['identifiant'];
+		$droit = $val['id_droit_police'];
 
 ?>
 
@@ -124,14 +128,14 @@ $query = "SELECT *
 								<option value="">...</option>
 									<?
 										//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liée pour renseigner la liste déroulante
-										$sql_infr = "SELECT id_droit, droit
-										FROM interventions.bib_droits
+										$sql_infr = "SELECT id_droit, nom_droit
+										FROM utilisateurs.bib_droits
 										ORDER BY id_droit";
 										$result = pg_query($sql_infr) or die ("Erreur requête") ;
 										while ($valeur = pg_fetch_assoc($result)){
 									?>
 									<!--  Stocker l'id correspondant à la valeur selectionnée. -->
-								<option value="<?=$valeur['id_droit'];?>" <?php if ($droit == $valeur['id_droit']) : ?>selected <? endif ; ?>><?=$valeur['droit'];?>
+								<option value="<?=$valeur['id_droit'];?>" <?php if ($droit == $valeur['id_droit']) : ?>selected <? endif ; ?>><?=$valeur['nom_droit'];?>
 								</option>
 									<? } ?>
 									
@@ -139,22 +143,6 @@ $query = "SELECT *
 							</select>		
 						</td>
 					</tr>
-					<tr>
-						<td>Asserment&eacute;</td>
-						<td>
-							<input type="radio" name="fassermente" value="TRUE" <?php if ($assermente == "t") : ?>checked<? endif ; ?>>Oui
-							<input type="radio" name="fassermente" value="FALSE" <?php if ($assermente == "f") : ?>checked<? endif ; ?>>Non
-						</td>
-					</tr>
-					<tr>
-						<td>En poste</td>
-						<td>
-							<input type="radio" name="fenposte" value="TRUE" <?php if ($enposte == "t") : ?>checked<? endif ; ?>>Oui
-							<input type="radio" name="fenposte" value="FALSE" <?php if ($enposte == "f") : ?>checked<? endif ; ?>>Non
-							<br/>
-							<span class="commentaire">Permet de garder un agent dans la base sans le faire afficher dans les listes d&eacute;roulantes des auteurs</span>
-						</td>
-					</tr>						
 				</table>
 			</div>
 			<table width="100%" border="0" cellspacing="5px" cellpadding="5px" align="center">

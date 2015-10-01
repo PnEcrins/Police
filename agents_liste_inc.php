@@ -50,7 +50,6 @@
 						<td width="20%" align="left">Agent</td>
 						<td width="20%" align="left">Organisme</td>
 						<td width="15%" align="left">Droit</td>
-						<td width="20%" align="left">Derniere connexion</td>
 						<td width="10%" align="left">Nombre d'interventions</td>
 						<? if ($ref_edit_agent=="oui") {?>
 						<td width="15%" align="left">Options</td>
@@ -60,13 +59,12 @@
 					<?  
 					while ($val = pg_fetch_assoc($resultliste)) 
 					{
-						$id = $val['id_utilisateur'];
-						$prenom = $val['prenomutilisateur'];
-						$nom = $val['nomutilisateur'];
+						$id = $val['id_role'];
+						$prenom = $val['prenom_role'];
+						$nom = $val['nom_role'];
 						$email = $val['email'];
 						$organisme = $val['organisme'];
-						$droit = $val['droit'];
-						$connexion = $val['dernieracces_police'];
+						$droit = $val['nom_droit'];
 						?>
 						
 						<tr>
@@ -77,7 +75,6 @@
 							</td>
 							<td class="Col3liste"><?echo $organisme;?></td>
 							<td class="Col3liste"><?echo $droit;?></td>
-							<td class="Col3liste"><?echo $connexion;?></td>
 							<td class="Col3liste">
 								<?php
 									$querynombre = "SELECT intervention_id FROM interventions.cor_interventions_agents

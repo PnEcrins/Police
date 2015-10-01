@@ -8,7 +8,7 @@
 				
 			<?php
 				//Declarer la requete listant les enregistrements de la table à lister,
-				$query = "SELECT * FROM utilisateurs.t_roles
+				$query = "SELECT id_role,nom_role,prenom_role FROM utilisateurs.t_roles
 				WHERE id_role = '".$_SESSION['xauthor']."'  ";
 				//Executer la requete
 				$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;

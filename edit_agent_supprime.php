@@ -5,14 +5,14 @@ if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 {
 	
 $qverif = "SELECT utilisateur_id FROM interventions.cor_interventions_agents
-		WHERE utilisateur_id = '$_POST[fagent]'";
+		   WHERE utilisateur_id = '$_POST[fagent]'";
 $verif = pg_query($qverif) or die ('Échec requête : ' . pg_last_error()) ;
 $nombreint = pg_numrows($verif);
 
 if ($nombreint==0) {
 
-$query = "DELETE FROM interventions.bib_agents
-		WHERE id_utilisateur = '$_POST[fagent]'";
+$query = "DELETE FROM utilisateurs.t_roles
+		  WHERE id_role = '$_POST[fagent]'";
 	
 pg_query($query) or die( "Erreur requete" );
 pg_close($dbconn);
@@ -36,15 +36,15 @@ else {
 
 			<?php
 				//Declarer la requete listant les enregistrements de la table à lister,
-				$query = "SELECT * FROM interventions.bib_agents
-				WHERE id_utilisateur = '$_GET[id]'" ; 
+				$query = "SELECT * FROM interventions.vue_agents
+				WHERE id_role = '$_GET[id]'" ; 
 				//Executer la requete
 				$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 
 				$val = pg_fetch_array($result) ;
-					$id = $val['id_utilisateur'];
-					$nom = $val['nomutilisateur'];
-					$prenom = $val['prenomutilisateur'];
+					$id = $val['id_role'];
+					$nom = $val['nom_role'];
+					$prenom = $val['prenom_role'];
 			?>
 				
 			

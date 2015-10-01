@@ -1,4 +1,5 @@
 <? include "verification.php" ?>
+<? include "parametres.php" ?>
 <?php
 //if ($_POST['Submit'] == "OK")
 if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
@@ -7,11 +8,21 @@ if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 $prenomutilisateur = pg_escape_string($_POST[fprenom]);
 $nomutilisateur = pg_escape_string($_POST[fnom]);
 $organisme = pg_escape_string($_POST[forganisme]);
-$query= "INSERT INTO interventions.bib_agents (prenomutilisateur, nomutilisateur, organisme, email, login, pass, droit_id, assermentes, enposte) 
-VALUES('$prenomutilisateur','$nomutilisateur','$organisme','$_POST[femail]','$_POST[futilisateur]',md5('$_POST[fpass]'),'$_POST[fdroits]','$_POST[fassermente]','$_POST[fenposte]')";
-		
+$query= "INSERT INTO utilisateurs.t_roles (prenom_role, nom_role, organisme, email, identifiant, pass) 
+VALUES('$prenomutilisateur','$nomutilisateur','$organisme','$_POST[femail]','$_POST[futilisateur]',md5('$_POST[fpass]'))";	
 pg_query($query) or die( "Erreur requete" );
+//retrouver l'utilisateur qui vient d'être inséré
+$query= "SELECT id_role FROM utilisateurs.t_roles 
+         WHERE nom_role = $prenomutilisateur
+         AND prenom_role = $prenomutilisateur
+         AND identifinant = $_POST[futilisateur]";
+pg_query($query) or die( "Erreur requete" );
+$val = pg_fetch_assoc($query);
+$id_role = $val['id_role'];
 
+$query= "INSERT INTO utilisateurs.cor_role_droit_application(id_role,id_droit,id_application)
+          VALUES($id_role,'$_POST[fdroits]',$id_application";
+pg_query($query) or die( "Erreur requete" );
 pg_close($dbconn);
 
 header("Location: agents_liste.php?agentajoute=$_POST[fprenom] $_POST[fnom]");

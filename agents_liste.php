@@ -15,10 +15,10 @@
 
 <?php
 //Declarer la requete listant les enregistrements de la table à lister,
-	$sqliste = "SELECT id_utilisateur, prenomutilisateur, nomutilisateur, organisme, email, dernieracces_police, droit
-	FROM interventions.bib_agents
-	LEFT JOIN interventions.bib_droits ON id_droit = droit_id
-	ORDER BY nomutilisateur, prenomutilisateur";
+	$sqliste = "SELECT id_role, prenom_role, nom_role, organisme, email, nom_droit
+	FROM interventions.vue_agents
+	LEFT JOIN utilisateurs.bib_droits ON id_droit = id_droit_police
+	ORDER BY nom_role, prenom_role";
 	//Executer la requete
 	$resultliste = pg_query($sqliste) or die ('Échec requête : ' . pg_last_error()) ;
 	//Compter le nombre d'enregistrements renvoyés par la requete

@@ -4,7 +4,7 @@
 if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 {
 
-$query = "UPDATE interventions.bib_agents
+$query = "UPDATE utilisateurs.t_roles
 		SET pass = md5('$_POST[fpass]')
 		WHERE id_utilisateur = '$_POST[fidut]'";
 	
@@ -22,15 +22,15 @@ else {
 
 			<?php
 				//Declarer la requete listant les enregistrements de la table à lister,
-				$query = "SELECT id_utilisateur, nomutilisateur, prenomutilisateur FROM interventions.bib_agents
-				WHERE id_utilisateur = '$_GET[id]'" ; 
+				$query = "SELECT id_role, nom_role, prenom_role FROM interventions.vue_agents
+				WHERE id_role = '$_GET[id]'" ; 
 				//Executer la requete
 				$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 
 				$val = pg_fetch_array($result) ;
-					$id = $val['id_utilisateur'];
-					$nom = $val['nomutilisateur'];
-					$prenom = $val['prenomutilisateur'];
+					$id = $val['id_role'];
+					$nom = $val['nom_role'];
+					$prenom = $val['prenom_role'];
 			?>
 				
 			

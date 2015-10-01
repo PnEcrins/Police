@@ -1,0 +1,28 @@
+<? include "verification.php" ?>
+<? include "header_front.php" ?>
+	<title>Police du <? echo $etablissement_abv; ?> - Liste des mod&egrave;les</title>
+</head>
+<body>
+
+	<? include "menu_general.php" ?>
+			
+			<div id="news">
+				<h1>Documents de référence</h1>
+				<p class="texte">
+					Vous pouvez gérer ici une liste de lien vers des documents sources utiles aux utilisateurs de cette application. Ces documents peuvent être stocker dans le répertoire "documents".<br/>
+                    <a href="documents/sample.txt"><img src="images/icones/word.png" align="absmiddle" class="noborder">Exemple</a><br/>
+                    <a href="documents/sample.txt"><img src="images/icones/pdf.png" align="absmiddle" class="noborder">Exemple</a><br/>
+                    <a href="documents/sample.txt"><img src="images/icones/excel-big.png" align="absmiddle" class="noborder">Exemple</a><br/>
+				</p>
+			</div>
+
+			<div class="clear"></div>			
+		<!-- Fermer le div contenu -->
+		</div>
+		<div id="bottom"></div>
+	<!-- Fermer le div conteneur -->
+	</div>
+	
+<? include "menu_pied.php" ?>
+</body>
+</html>
