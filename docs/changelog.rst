@@ -19,7 +19,7 @@ CHANGELOG
 * Ajout des champs `DATE AUDIENCE` et `APPEL AVOCAT` (dans les formulaire d'ajout/modification, dans les fiches de visualisation d'une intervention et dans les export XLS).
 * La recherche que l'on pouvait déjà faire dans la liste des interventions est maintenant aussi possible dans l'onglet CARTO (reste quelques ajustements à faire sur cette page).
 
-**Correction de bugs
+**Correction de bugs**
 
 * Les problèmes d'accent et d'apostrophes dans les champs textes ont été réglés
 * Les fichiers PHP ont été convertis en UTF8
