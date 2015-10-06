@@ -1,7 +1,15 @@
 POLICE
 ======
 
-TODO
+Police est une application développée par le Parc national des Ecrins en 2010. 
+
+Elle permet d'inventorier les interventions de police (PV, TA, avertissement, rapport...) réalisées par les agents de l'établissement. 
+
+Il est ensuite possible de consulter ou exporter l'inventaire des interventions sous forme de carte ou de liste, rechercher, et imprimer une intervention.
+ 
+Le référent peut aussi renseigner les informations concernant la suite donnée à chaque intervention (numero du parquet, amende, dommages et intérêts...).
+
+.. image :: docs/img/police-appli-presentation.jpg
 
 Technologies
 ------------
@@ -9,15 +17,8 @@ Technologies
 - Langages : PHP, HTML, JS (un peu), CSS
 - BDD : PostgreSQL, PostGIS
 - Serveur : Debian ou Ubuntu
-- Framework carto : Openlayers ou API GoogleMaps
-- Serveur carto : MapServer
+- Framework carto : Openlayers 2.0 ou API GoogleMaps (ancienne version de l'API, ne fonctionne plus)
 - Fonds rasters : Geoportail, Google Maps, WMS
-
-Présentation
-------------
-
-Cette application a vocation à collecter toutes les interventions de police de quelque nature qu'elle soit (PV, TA, avertissement, ...).
-TODO
 
 Gestion des utilisateurs
 ------------------------
