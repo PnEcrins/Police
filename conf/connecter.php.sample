@@ -1,9 +1,9 @@
 <?php 
     
-	$serveur="monserveur"; 
-	$user ="monuser";
-	$passe="monpass"; 
-	$base="policedb";
+	$serveur='policedbhost'; 
+	$user ='policeuser';
+	$passe='monpassachanger'; 
+	$base='policedb';
     
 	$dbconn = pg_connect("host=$serveur dbname=$base user=$user password=$passe") 
 or die('Connexion impossible : ' . pg_last_error());  

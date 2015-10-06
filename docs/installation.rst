@@ -2,9 +2,42 @@
 APPLICATION
 ===========
 
+Configuration de la base de données PostgreSQL
+==============================================
+
+* Copier et renommer le fichier ``conf/settings.ini.sample`` en ``conf/settings.ini`` :
+
+    :: 
+	
+	    cp conf/settings.ini.sample conf/settings.ini
+
+* Mettre à jour le fichier ``conf/settings.ini`` avec vos paramètres de connexion à la BDD :
+
+    :: 
+	
+	    nano conf/settings.ini
+
+Renseigner le nom de la base de données, les utilisateurs PostgreSQL et les mots de passe. Il est possible mais non conseillé de laisser les valeurs proposées par défaut. 
+
+ATTENTION : Les valeurs renseignées dans ce fichier sont utilisées par le script d'installation de la base de données ``install_db.sh``. Les utilisateurs PostgreSQL doivent être en concordance avec ceux créés lors de la dernière étape de l'installation du serveur (Création de 2 utilisateurs PostgreSQL). 
+
+
 Création de la base de données
 ==============================
-TODO
+
+* Création de la base de données et chargement des données initiales
+
+    ::
+    
+        cd /home/monuser/police
+        sudo ./install_db.sh
+
+* Si besoin, l'exemple des données SIG du Parc national des Ecrins pour les tables du schéma ``layers``
+  
+    ::
+
+        export PGPASSWORD=monpassachanger;psql -h policedbhost -U policeuser -d policedb -f data/pne/policedb_data_sig_pne.sql 
+        
 
 Configuration de l'application
 ==============================
