@@ -5,7 +5,7 @@ Police est une application développée par le Parc national des Ecrins en 2010.
 
 Elle permet d'inventorier les interventions de police (PV, TA, avertissement, rapport...) réalisées par les agents de l'établissement. 
 
-Il est ensuite possible de consulter l'inventaire des interventions sous forme de carte ou de liste, rechercher et imprimer une intervention.
+Il est ensuite possible de consulter ou exporter l'inventaire des interventions sous forme de carte ou de liste, rechercher, et imprimer une intervention.
  
 Le référent peut aussi renseigner les informations concernant la suite donnée à chaque intervention (numero du parquet, amende, dommages et intérêts...).
 
