@@ -39,14 +39,14 @@ if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 						<select name="finfr" class="controleformulaire">
 							<option value="">...</option>
 								<?
-									//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liée pour renseigner la liste déroulante
+									//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÃ©e pour renseigner la liste dÃ©roulante
 									$sql_infr = "SELECT id_infraction, infraction
 									FROM interventions.bib_infractions
 									ORDER BY infraction";
-									$result = pg_query($sql_infr) or die ("Erreur requête") ;
+									$result = pg_query($sql_infr) or die ("Erreur requÃªte") ;
 									while ($val = pg_fetch_assoc($result)){
 								?>
-								<!--  Stocker l'id correspondant à la valeur selectionnée. -->
+								<!--  Stocker l'id correspondant Ã  la valeur selectionnÃ©e. -->
 							<option value="<?=$val['id_infraction'];?>"><?=$val['infraction']?></option>
 								<? } ?>
 						</select>		
@@ -58,14 +58,14 @@ if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 						<select name="fqual" class="controleformulaire">
 							<option value="">...</option>
 								<?
-									//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liée pour renseigner la liste déroulante
+									//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÃ©e pour renseigner la liste dÃ©roulante
 									$sql_infr = "SELECT id_qualification, qualification
 									FROM interventions.bib_qualification
 									ORDER BY qualification";
-									$result = pg_query($sql_infr) or die ("Erreur requête") ;
+									$result = pg_query($sql_infr) or die ("Erreur requÃªte") ;
 									while ($val = pg_fetch_assoc($result)){
 								?>
-								<!--  Stocker l'id correspondant à la valeur selectionnée. -->
+								<!--  Stocker l'id correspondant Ã  la valeur selectionnÃ©e. -->
 							<option value="<?=$val['id_qualification'];?>"><?=$val['qualification']?></option>
 								<? } ?>
 						</select>

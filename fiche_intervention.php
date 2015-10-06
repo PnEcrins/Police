@@ -11,9 +11,13 @@
 
 <?php
 
-	//Declarer la requete listant les enregistrements de la table ‡ lister,
-	$query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limite, 'dd/mm/yyyy') as datlimite, 
-		to_char(date, 'Day') as jour, to_char(suivi_date_constitution, 'dd/mm/yyyy') as suivi_dat_constitution 
+	//Declarer la requete listant les enregistrements de la table √† lister,
+	$query = "SELECT *, 
+			to_char(date, 'dd/mm/yyyy') as dat, 
+			to_char(suivi_date_limite, 'dd/mm/yyyy') as datlimite, 
+			to_char(date, 'Day') as jour, 
+			to_char(suivi_date_constitution, 'dd/mm/yyyy') as suivi_dat_constitution,
+			to_char(suivi_date_audience, 'dd/mm/yyyy') as suivi_dat_audience
 	FROM interventions.t_interventions
 	LEFT JOIN interventions.bib_types_interventions ON id_type_intervention = type_intervention_id
 	LEFT JOIN interventions.bib_statutszone ON id_statutzone = statutzone_id
@@ -21,7 +25,7 @@
 	LEFT JOIN layers.l_secteurs ON id_sect = secteur_id
 	WHERE id_intervention = '$_GET[id]'" ; 
 	//Executer la requete
-	$result = pg_query($query) or die ('…chec requÍte : ' . pg_last_error()) ;
+	$result = pg_query($query) or die ('√âchec requ√™te : ' . pg_last_error()) ;
 
 	$val = pg_fetch_array($result) ;
 		$id = $val['id_intervention'];
@@ -40,7 +44,9 @@
 		$suite = $val['suivi_suite_donnee'];
 		$commentaire = $val['suivi_commentaire'];
 		$partie = $val['suivi_partie_civile'];
+		$avocat = $val['suivi_appel_avocat'];
 		$dateconstitution = $val['suivi_dat_constitution'];
+		$dateaudience = $val['suivi_dat_audience'];
 		$amende = $val['suivi_montant_amende'];
 		$amendedommages = $val['suivi_montant_dommages'];
 ?>
@@ -65,8 +71,8 @@
 			LEFT JOIN interventions.bib_qualification ON id_qualification = qualification_id
 			WHERE id_intervention = '$id'";
 			//Executer la requete
-			$result = pg_query($query) or die ('…chec requÍte : ' . pg_last_error()) ;
-			//Compter le nombre d'enregistrements renvoyÈs par la requete
+			$result = pg_query($query) or die ('√âchec requ√™te : ' . pg_last_error()) ;
+			//Compter le nombre d'enregistrements renvoy√©s par la requete
 			$nombreinfr = pg_numrows($result);
 		?>
 			<table border="0" width="100%" cellspacing="4px" cellpadding="4px" align="center">
@@ -89,7 +95,7 @@
 					<? } ?>
 				<? }else{ ?>
 					<tr>
-						<td colspan="2">Aucune infraction renseign&eacute;e pour cette intervention</td>
+						<td colspan="2">Aucune infraction renseign√©e pour cette intervention</td>
 					</tr>
 				<? } ?>
 			</table>
@@ -104,19 +110,19 @@
 			WHERE i.id_intervention = '$id'
 			ORDER BY u.nom_role";
 			//Executer la requete
-			$result = pg_query($query) or die ('…chec requÍte : ' . pg_last_error()) ;
-			//Compter le nombre d'enregistrements renvoyÈs par la requete
+			$result = pg_query($query) or die ('√âchec requ√™te : ' . pg_last_error()) ;
+			//Compter le nombre d'enregistrements renvoy√©s par la requete
 			$nombreagent = pg_numrows($result);	
 		?>	
 			<table width="100%" border="0" cellspacing="4px" cellpadding="4px" align="center">
 		        <?  if ($nombreagent > 0){ ?>
 					<tr class="Col1liste" height="30px">
-						<td align="left" class="commentaire">Agent(s) pr&eacute;sent(s)</td>
+						<td align="left" class="commentaire">Agent(s) pr√©sent(s)</td>
 					</tr>
 				<?  
 				while ($val = pg_fetch_assoc($result)) 
 				{
-				$agent = $val['nomutilisateur'].' '.$val['prenomutilisateur'];
+				$agent = $val['nom_role'].' '.$val['prenom_role'];
 				$id = $val['id_intervention'];
 				?>
 					<tr>
@@ -125,7 +131,7 @@
 					<? } ?>
 				<? }else{ ?>
 					<tr>
-						<td>Aucun agent renseign&eacute; pour cette intervention</td>
+						<td>Aucun agent renseign√© pour cette intervention</td>
 					</tr>
 				<? } ?>
 			
@@ -145,12 +151,6 @@
 	<p>
 		<span class="commentaire">Statut de la zone :</span> <? echo $statut ?>
 	</p>
-	<!-- Ne pas afficher le champ Contrevenant en attendant la declaration CNIL
-	<hr color="#dcdcdc" > 
-	<p>
-		<span class="commentaire">Contrevenant(s) :</span> 
-	</p>
-	-->
 	<hr color="#dcdcdc" > 
 	<p>
 		<span class="commentaire">Nombre de contrevenants :</span> <? echo $nbcontrev ?>
@@ -165,11 +165,24 @@
 	</p>
 	<hr color="#dcdcdc" > 
 	<p>
-		<span class="commentaire">Num&eacute;ro du parquet :</span> <? echo $parquet ?>
+		<span class="commentaire">Num√©ro du parquet :</span> <? echo $parquet ?>
 	</p>
 	<hr color="#dcdcdc" > 
 	<p>
-		<span class="commentaire">Suite donn&eacute;e :</span> <? echo $suite ?>
+		<span class="commentaire">Date d'audience :</span> <? echo $dateaudience ?>
+	</p>
+	<hr color="#dcdcdc" > 
+	<p>
+		<span class="commentaire">Appel √† un avocat :</span> 
+			<?  if ($avocat == "t"){ ?>
+				Oui
+			<? }elseif ($avocat == "f"){ ?>
+				Non
+			<? } ?>
+	</p>
+	<hr color="#dcdcdc" > 
+	<p>
+		<span class="commentaire">Suite donn√©e :</span> <? echo $suite ?>
 	</p>
 	<hr color="#dcdcdc" > 
 	<p>
@@ -180,7 +193,7 @@
 		<span class="commentaire">Constitution de partie civile :</span> 
 			<?  if ($partie == "t"){ ?>
 				Oui
-			<? }else{ ?>
+			<? }elseif ($partie == "f"){ ?>
 				Non
 			<? } ?>
 	</p>
@@ -190,7 +203,7 @@
 	</p>
 	<hr color="#dcdcdc" > 
 	<p>
-		<span class="commentaire">Montant des dommages et int&eacute;r&ecirc;ts (euros) :</span> <? echo $amendedommages ?>
+		<span class="commentaire">Montant des dommages et int√©r√™ts (euros) :</span> <? echo $amendedommages ?>
 	</p>
 	<hr color="#dcdcdc" > 
 	<p>

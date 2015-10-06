@@ -15,10 +15,18 @@ seront ensuite stockées dans la BD PostgreSQL -->
 				X : <input id="longEnd" value="" maxlength="30" type="text" name="fx" readonly="true" class="commentaire" style="border:0px"> - d&eacute;termin&eacute; selon la position du marqueur<br>
 				Y : <input id="latEnd" value="" maxlength="30" type="text" name="fy"  readonly="true" class="commentaire" style="border:0px"> - d&eacute;termin&eacute; selon la position du marqueur<br>
 			</span/>-->
+            <? if ($outil_carto == "gm") { ?>
+            X : <input id="longEnd" type="text" name="fx">
+                <span id="commentairex" class="commentaire"> - Saisir vos coordonnées en degrés décimaux (exemple : 6.29571)</span/><br>
+            Y : <input id="latEnd" type="text" name="fy">
+                <span id="commentairey" class="commentaire"> - Saisir vos coordonnées en degrés décimaux</span/>
+            <?}?>
+            <? if ($outil_carto == "ol") { ?>
             X : <input id="longEnd" type="text" name="fx" onChange="create_ol.putPoint('<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>');">
                 <span id="commentairex" class="commentaire"> - Saisir vos coordonnées en degrés décimaux (exemple : 6.29571)</span/><br>
             Y : <input id="latEnd" type="text" name="fy" onChange="create_ol.putPoint('<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>');">
                 <span id="commentairey" class="commentaire"> - Saisir vos coordonnées en degrés décimaux</span/>
+            <?}?>
 		</p>
 		<p>
 			<span class="colbord">Commune : </span>

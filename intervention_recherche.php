@@ -5,11 +5,19 @@
 	<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 	<title>Rechercher une infraction</title>
 </head>
+<?php
+$source = $_GET['from']
+?>
 
 <body>
 
 			<div id="filtre">
+                <?php if($source == 'carte') { ?>
+					<form action = "carto.php" method = "POST" name = "carto">
+                <?php } else { ?>
 					<form action = "intervention_recherche_resultat.php" method = "POST" name = "rechinfr">
+                <?php } ?>
+                
 						Choisissez vos crit&egrave;res de recherche dans les listes d&eacute;roulantes. 
 						Ces crit&egrave;res peuvent &ecirc;tre combin&eacute;s.<br/>
 						<br/>
@@ -126,25 +134,25 @@
 												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liée pour renseigner la liste déroulante
 												$sql_agent = "SELECT a.* FROM 
                                                     (
-                                                        (SELECT u.id_role AS id_utilisateur, u.nom_role AS nomutilisateur, u.prenom_role AS prenomutilisateur
+                                                        (SELECT u.id_role, u.nom_role, u.prenom_role
                                                         FROM utilisateurs.t_roles u
                                                         JOIN utilisateurs.cor_roles g ON g.id_role_utilisateur = u.id_role
                                                         JOIN utilisateurs.cor_role_menu crm ON crm.id_role = g.id_role_groupe
                                                         WHERE crm.id_menu = 14)
                                                         UNION
-                                                        (SELECT u.id_role AS id_utilisateur, u.nom_role AS nomutilisateur, u.prenom_role AS prenomutilisateur
+                                                        (SELECT u.id_role AS id_utilisateur, u.nom_role, u.prenom_role
                                                         FROM utilisateurs.t_roles u
                                                         JOIN utilisateurs.cor_role_menu crm ON crm.id_role = u.id_role
                                                         WHERE crm.id_menu = 14
                                                         AND u.groupe = false
                                                         )
                                                     ) a
-                                                   ORDER BY a.nomutilisateur";
+                                                   ORDER BY a.nom_role";
 												$resultagent = pg_query($sql_agent) or die ("Erreur requête") ;
 												while ($val = pg_fetch_assoc($resultagent)){
 											?>
 											<!--  Stocker l'id correspondant à la valeur selectionnée. Selectionner par défaut la valeur correspondant à l'enregistrement à modifier  -->
-										<option value="<?=$val['id_utilisateur'];?>" <?php if ($_GET[agent] == $val['id_utilisateur']) : ?>selected <? endif ; ?>><?=$val['nomutilisateur'].' '.' '.$val['prenomutilisateur'];?></option>
+										<option value="<?=$val['id_role'];?>" <?php if ($_GET[agent] == $val['id_role']) : ?>selected <? endif ; ?>><?=$val['nom_role'].' '.' '.$val['prenom_role'];?></option>
 											<? } ?>
 									</select>
 								</td>

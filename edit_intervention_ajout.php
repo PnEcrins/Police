@@ -10,9 +10,9 @@ else { $nbcontrev = $_POST[fnbcontrev] ;
 }
 //correction des magic_quotes_gpc (protection des chaînes de caractères)
 $observation = pg_escape_string($_POST[fobs]);
-$query= "INSERT INTO interventions.t_interventions (date, type_intervention_id, commune_id, secteur_id, coord_x, coord_y, statutzone_id, observation, nbcontrevenants) 
-VALUES(to_date('$_POST[fdate]','dd/mm/yyyy'),'$_POST[fintervention]','$_POST[fcomm]', '$_POST[fsect]','$_POST[fx]','$_POST[fy]','$_POST[fstatut]','$observation', $nbcontrev)";
-		
+$query= "INSERT INTO interventions.t_interventions (date, type_intervention_id, commune_id, secteur_id, coord_x, coord_y, statutzone_id, observation, nbcontrevenants, the_geom) 
+VALUES(to_date('$_POST[fdate]','dd/mm/yyyy'),'$_POST[fintervention]','$_POST[fcomm]', '$_POST[fsect]','$_POST[fx]','$_POST[fy]','$_POST[fstatut]','$observation', $nbcontrev, Transform(SETSRID(MakePoint('$_POST[fx]', '$_POST[fy]'),4326), $wms_proj))";
+	
 pg_query($query) or die( "Erreur requete" );
 
 $queryid = "SELECT id_intervention from interventions.t_interventions
@@ -70,7 +70,7 @@ else {
 <body onload="create_gm(<?=$gm_y_center;?>,<?=$gm_x_center;?>,10,'<?=$host_url;?>','<?=$racine;?>',true)" onunload="GUnload()">
 <? } elseif ($outil_carto == "ol") { ?>
 <!-- Sinon on charge celles de GoogleMaps -->
-<body onload="create_ol.init(<?=$ol_x_center;?>,<?=$ol_y_center;?>,1,'<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',true)">
+<body onload="create_ol.init(<?=$ol_x_center;?>,<?=$ol_y_center;?>,1,'<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',false)">
 <? } ?>
 	
 	<? include "menu_general.php" ?>
@@ -134,12 +134,6 @@ else {
 			</div>
 			<div class="blocos">
 				<table width="100%" border="0" cellspacing="5px" cellpadding="5px" align="center">
-					<!-- Ne pas afficher le champ Contrevenant en attendant la declaration CNIL
-					<tr>
-						<td>Contrevenants</td>
-						<td><input type="text" name="fcontrev" size="66"></td>
-					</tr>
-					-->
 					<tr>
 						<td>Nombre de contrevenants</td>
 						<td><input type="text" name="fnbcontrev"></td>

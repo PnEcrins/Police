@@ -26,7 +26,7 @@ header("Location: edit_intervention_modif.php?id=$idinterv");
 						LEFT JOIN interventions.bib_qualification ON id_qualification = qualification_id
 						LEFT JOIN interventions.bib_infractions ON id_infraction = infraction_id
 						WHERE intervention_id = $idinterv AND infraction_id = $idinfr AND qualification_id = $idqual";
-						$result = pg_query($sqlinfr) or die ("Erreur requête") ;
+						$result = pg_query($sqlinfr) or die ("Erreur requÃªte") ;
 						$val = pg_fetch_assoc($result);
 						$infr = $val['infraction'];
 						$qual = $val['qualification'];

@@ -35,7 +35,7 @@ function getxyMarqueur() {
     return qstr;
 }
 
-function updatePage(val1,val2){
+function updatePage(val1,val2,val5,val3,val4){
 	//communes
     var l = document.getElementById('fcomm1').length;
     for (i=0; i<l; i++)
@@ -90,11 +90,11 @@ function create_gm(xCentre,yCentre,zoom,hostUrl,racine,marqueur,vecteur) {
 	//Ecouter les modifications à chaque déplacement du curseur et mettre à jour les champs X et Y dont dépendent Commune et Zone.
 	GEvent.addListener(marker, "dragend", function() {
 		  var p = marker.getPoint();
-		  x = p.x;
-		  y = p.y;
+		  x = p.L;
+		  y = p.H;
 		  var qstr = 'x=' + escape(x) + '&y=' + escape(y);
           getTerritoire("ajax_return_territoire.php", qstr);
-	  });
+	});
 	// Afficher le marqueur créé plus haut
 	map1.addOverlay(marker);
 	// Afficher le coeur du PnE (fichier KML)

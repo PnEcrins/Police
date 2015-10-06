@@ -40,14 +40,13 @@ if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 						<select name="fagent" >
 							<option value="">...</option>
 								<?
-									$sql_agent = "SELECT id_utilisateur , nomutilisateur , prenomutilisateur  
-									FROM interventions.bib_agents 
-									WHERE enposte = 't' and assermentes = 't'
-									ORDER BY nomutilisateur";
-									$result = pg_query($sql_agent) or die ("Erreur requête") ;
+									$sql_agent = "SELECT id_role, nom_role, prenom_role
+									FROM interventions.vue_agents
+									ORDER BY nom_role";
+									$result = pg_query($sql_agent) or die ("Erreur requÃªte") ;
 									while ($val = pg_fetch_assoc($result)){
 								?>
-							<option value="<?=$val['id_utilisateur'];?>"><?=$val['nomutilisateur'].' '.' '.$val['prenomutilisateur'];?></option>
+							<option value="<?=$val['id_role'];?>"><?=$val['nom_role'].' '.' '.$val['prenom_role'];?></option>
 								<? } ?>
 						</select>
 						<input type="hidden" name="finterv" value="<? echo $idinterv; ?>">						

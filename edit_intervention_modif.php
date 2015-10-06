@@ -9,9 +9,22 @@ if ($_POST['fnbcontrev'] == "") //Si le champ 'nombre de contrevenants' est vide
 else { $nbcontrev = $_POST[fnbcontrev] ;
 }
 
-if ($_POST['fpartiecivile'] == "") //Si le champ 'nombre de contrevenants' est vide alors j'insere la valeur null
-	{ $partieciv = $_POST[fpartiecachee]; }
+if ($_POST['fpartiecachee'] == "") //Si le champ cach√© 'partie civile' est vide alors j'insere la valeur null
+	{ $partiecachee = 'null'; }
+else { $partiecachee = $_POST[fpartiecachee] ;
+}
+if ($_POST['fpartiecivile'] == "") //Si le champ 'partie civile' est vide alors j'insere la valeur null
+	{ $partieciv = $partiecachee; }
 else { $partieciv = $_POST[fpartiecivile] ;
+}
+
+if ($_POST['favocatcachee'] == "") //Si le champ cach√© 'Avocat' est vide alors j'insere la valeur null
+	{ $avocatcachee = 'null'; }
+else { $avocatcachee = $_POST[favocatcachee] ;
+}
+if ($_POST['favocat'] == "") //Si le champ 'Avocat' est vide alors j'insere la valeur null
+	{ $avocat = $avocatcachee; }
+else { $avocat = $_POST[favocat] ;
 }
 
 if ($_POST['famende'] == "") //Si le champ 'montant de l'amende' est vide alors j'insere la valeur null
@@ -35,7 +48,14 @@ if ($_POST['fdateconstitution'] == "") //Si le champ 'date de constitution' est 
 else { $dateconstitution = explode("/",$_POST[fdateconstitution]) ;
 	$dateconstitution = "'".$dateconstitution[2]."-".$dateconstitution[1]."-".$dateconstitution[0]."'" ;
 }
-//correction des magic_quotes_gpc (protection des chaÓnes de caractËres)
+
+if ($_POST['fdateaudience'] == "") //Si le champ 'date audience' est vide alors j'insere la valeur null
+	{ $dateaudience = 'null'; }
+else { $dateaudience = explode("/",$_POST[fdateaudience]) ;
+	$dateaudience = "'".$dateaudience[2]."-".$dateaudience[1]."-".$dateaudience[0]."'" ;
+}
+
+//correction des magic_quotes_gpc (protection des cha√Ænes de caract√®res)
 $observation = pg_escape_string($_POST[fobs]);
 $suivi_num_parquet = pg_escape_string($_POST[fnumparquet]);
 $suivi_suite_donnee = pg_escape_string($_POST[fsuite]);
@@ -48,15 +68,18 @@ $query= "UPDATE interventions.t_interventions SET
 	secteur_id = '$_POST[fsect]', 
 	coord_x = '$_POST[fx]', 
 	coord_y = '$_POST[fy]', 
+	the_geom = Transform(SETSRID(MakePoint('$_POST[fx]', '$_POST[fy]'),4326), $wms_proj),
 	statutzone_id = '$_POST[fstatut]', 
 	observation = '$observation',
 	nbcontrevenants = $nbcontrev,
 	suivi_date_limite = $datelimite,
+	suivi_date_audience = $dateaudience,
 	suivi_num_parquet = '$suivi_num_parquet',
 	suivi_suite_donnee = '$suivi_suite_donnee',
 	suivi_commentaire = '$suivi_commentaire',
 	suivi_montant_amende = $amende,
 	suivi_partie_civile = $partieciv,
+	suivi_appel_avocat = $avocat,
 	suivi_montant_dommages = $amendedommages,
 	suivi_date_constitution = $dateconstitution
 		WHERE id_intervention = '$_GET[id]'";
@@ -75,7 +98,7 @@ else {
 
 	<? include "header_front.php" ?>
 		
-		<!-- Librairie Jquery utilisÈe par Facebox et Datepicker -->
+		<!-- Librairie Jquery utilis√©e par Facebox et Datepicker -->
 		<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
 		
 		<!-- Facebox pour afficher des popups en javascript -->
@@ -110,7 +133,13 @@ else {
 			});
 		</script>
 		
-		<!-- Javascript permettant de vÈrifier que les champs obligatoires sont bien remplis -->
+		<script type="text/javascript">
+			$(function() {
+				$("#datepicker4").datepicker($.datepicker.regional['fr']);
+			});
+		</script>
+		
+		<!-- Javascript permettant de v√©rifier que les champs obligatoires sont bien remplis -->
 		<script type="text/javascript" src="js/forms_verifications.js"></script> 
 		
 		<!-- Chargement des fichiers javascripts en fonction de l'outil carto choisi (GoogleMaps ou OpenLayers) -->
@@ -120,14 +149,17 @@ else {
 		<? } elseif ($outil_carto == "ol") { ?>
 			<script type="text/javascript" src="js/application.ol.js"></script>
 			<script type="text/javascript" src="js/openlayers/OpenLayers.js"></script>
-            <script type="text/javascript" src="conf/parametres_wms.js"></script>
+			<script type="text/javascript" src="conf/parametres_wms.js"></script>
 		<? } ?>
   
 	<title>Police du <? echo $etablissement_abv; ?> - Modifier une intervention</title>
 </head>
 
 <?
-$query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limite, 'dd/mm/yyyy') as suivi_dat_limite, 
+$query = "SELECT *, 
+		to_char(date, 'dd/mm/yyyy') as dat, 
+		to_char(suivi_date_limite, 'dd/mm/yyyy') as suivi_dat_limite, 
+		to_char(suivi_date_audience, 'dd/mm/yyyy') as suivi_dat_audience, 
 		to_char(suivi_date_constitution, 'dd/mm/yyyy') as suivi_dat_constitution
 	FROM interventions.t_interventions
 	LEFT JOIN interventions.bib_types_interventions ON id_type_intervention = type_intervention_id
@@ -135,7 +167,7 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 	LEFT JOIN layers.l_communes ON id_commune = commune_id
 	WHERE id_intervention = '$_GET[id]'" ; 
 	//Executer la requete
-	$result = pg_query($query) or die ('…chec requÍte : ' . pg_last_error()) ;
+	$result = pg_query($query) or die ('√âchec requ√™te : ' . pg_last_error()) ;
 
 	$val = pg_fetch_array($result) ;
 		$id = $val['id_intervention'];
@@ -153,21 +185,24 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 		$x = $val['coord_x'];
 		$y = $val['coord_y'];
 		$datelimite = $val['suivi_dat_limite'];
+		$dateaudience = $val['suivi_dat_audience'];
 		$numparquet = $val['suivi_num_parquet'];
 		$suite = $val['suivi_suite_donnee'];
 		$comment = $val['suivi_commentaire'];
 		$partie = $val['suivi_partie_civile'];
-		if ($partie == "t") { $partiecivile = 'TRUE'; } else { $partiecivile = 'FALSE'; }	
+		if ($partie == "t") { $partiecivile = 'TRUE'; } elseif ($partie == "f") { $partiecivile = 'FALSE'; } else { $partiecivile = ''; }
+		$avocat = $val['suivi_appel_avocat'];
+		if ($avocat == "t") { $appelavocat = 'TRUE'; } elseif ($avocat == "f") { $appelavocat = 'FALSE'; } else { $appelavocat = ''; }	
 		$dateconstitution = $val['suivi_dat_constitution'];
 		$amende = $val['suivi_montant_amende'];
 		$amendedommages = $val['suivi_montant_dommages'];
 
-		// Si l'outil carto est OpenLayers alors il faut d'abord reprojeter les coord X et Y qui sont stockÈs en WGS84 dans la BdD 
+		// Si l'outil carto est OpenLayers alors il faut d'abord reprojeter les coord X et Y qui sont stock√©s en WGS84 dans la BdD 
 		// vers la projection des fonds carto fournis par le WMS.
 		if ($outil_carto == "ol") { 
 		$reproj = "SELECT st_x(Transform(SETSRID(MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS xl2, 
 		st_y(Transform(SETSRID(MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS yl2;";
-		$result = pg_query($reproj) or die ('…chec requÍte : ' . pg_last_error()) ;
+		$result = pg_query($reproj) or die ('√âchec requ√™te : ' . pg_last_error()) ;
 		$val = pg_fetch_array($result) ;
 
 		$xl2 = $val['xl2'];
@@ -176,11 +211,11 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 ?>
 
 <? if ($outil_carto == "gm") { ?>
-<!-- Si l'outil carto utilisÈ est OpenLayers alors charger ses fonctions javascripts ‡ l'ouverture de la page -->
+<!-- Si l'outil carto utilis√© est OpenLayers alors charger ses fonctions javascripts √† l'ouverture de la page -->
 	<body onload="create_gm(<?=$y;?>,<?=$x;?>,13,'<?=$host_url;?>','<?=$racine;?>',true)" onunload="GUnload()">
 <? } elseif ($outil_carto == "ol") { ?>
 <!-- Sinon on charge celles de GoogleMaps -->
-	<body onload="create_ol.init(<?=$xl2;?>,<?=$yl2;?>,'6','<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',true)">
+	<body onload="create_ol.init(<?=$xl2;?>,<?=$yl2;?>,'6','<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',true);">
 <? } ?>
 
 
@@ -189,7 +224,7 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 			<div id="news">
 				<h1>
 					<img src="images/icones/modifier.gif" alt="Modifier une intervention" title="Modifier une intervention" border="0" align="absmiddle"> 
-					Modifier l'intervention <? echo $id;?> <? echo $jour;?> <?=$daate;?>
+					Modifier l'intervention <? echo $id;?>
 				</h1>
 			</div>
 
@@ -216,8 +251,8 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 								LEFT JOIN interventions.bib_qualification ON id_qualification = qualification_id
 								WHERE id_intervention = '$id'";
 								//Executer la requete
-								$result = pg_query($query) or die ('…chec requÍte : ' . pg_last_error()) ;
-								//Compter le nombre d'enregistrements renvoyÈs par la requete
+								$result = pg_query($query) or die ('√âchec requ√™te : ' . pg_last_error()) ;
+								//Compter le nombre d'enregistrements renvoy√©s par la requete
 								$nombreinfr = pg_numrows($result);
 							?>
 							<?  if ($nombreinfr > 0){ ?>
@@ -250,7 +285,7 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 								<? } ?>
 							<? }else{ ?>
 								<tr>
-									<td class="Col1liste" height="40" colspan="3">Aucune infraction renseign&eacute;e pour cette intervention</td>
+									<td class="Col1liste" height="40" colspan="3">Aucune infraction renseign√©e pour cette intervention</td>
 								</tr>
 							<? } ?>
 						</table>
@@ -261,7 +296,7 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 				{?>
 				<tr>
 					<td></td>
-					<td colspan = "2" class="alerte">Attention ! Doublon, cette infraction a d&eacute;j&agrave; &eacute;t&eacute; ajout&eacute;e.</td>
+					<td colspan = "2" class="alerte">Attention ! Doublon, cette infraction a d√©j√† √©t√© ajout√©e.</td>
 				</tr>
 				<?}
 				?>
@@ -275,30 +310,31 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 					</td>
 				</tr>
 				<tr>
-					<td class="Col1ajout" width="20%">Agent(s) present(s)</td>
+					<td class="Col1ajout" width="20%">Agent(s) pr√©sent(s)</td>
 					<td class="Col2ajout">
 						<table width="100%">
 							<?
-								$query = "SELECT id_intervention, nomutilisateur, prenomutilisateur, id_utilisateur FROM interventions.t_interventions
-								JOIN interventions.cor_interventions_agents ON intervention_id = id_intervention
-								JOIN interventions.bib_agents ON id_utilisateur = utilisateur_id
-								WHERE id_intervention = '$id'
-								ORDER BY nomutilisateur";
+								$query = "SELECT i.id_intervention, u.nom_role, u.prenom_role, u.id_role FROM interventions.t_interventions i
+								JOIN interventions.cor_interventions_agents cia ON cia.intervention_id = i.id_intervention
+								JOIN utilisateurs.t_roles u ON u.id_role = cia.utilisateur_id
+								WHERE i.id_intervention = '$id'
+								ORDER BY u.nom_role";
+
 								//Executer la requete
-								$result = pg_query($query) or die ('…chec requÍte : ' . pg_last_error()) ;
-								//Compter le nombre d'enregistrements renvoyÈs par la requete
+								$result = pg_query($query) or die ('√âchec requ√™te : ' . pg_last_error()) ;
+								//Compter le nombre d'enregistrements renvoy√©s par la requete
 								$nombreagent = pg_numrows($result);	
 							?>	
 							<?  if ($nombreagent > 0){ ?>
 								<tr>
-									<td class="Col1liste" align="left">Agent(s) pr&eacute;sent(s)</td>
+									<td class="Col1liste" align="left">Agent(s) pr√©sent(s)</td>
 									<td class="Col1liste" align="left">Options</td>
 								</tr>
 							<?  
 							while ($val = pg_fetch_assoc($result)) 
 							{
-							$agent = $val['nomutilisateur'].' '.$val['prenomutilisateur'];
-							$idagent = $val['id_utilisateur'];
+							$agent = $val['nom_role'].' '.$val['prenom_role'];
+							$idagent = $val['id_role'];
 							$idinterv = $val['id_intervention'];
 							?>
 								<tr>
@@ -312,7 +348,7 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 								<? } ?>
 							<? }else{ ?>
 								<tr>
-									<td class="Col1liste" height="40" colspan="2">Aucun agent renseign&eacute; pour cette intervention</td>
+									<td class="Col1liste" height="40" colspan="2">Aucun agent renseign√© pour cette intervention</td>
 								</tr>
 							<? } ?>
 						</table>
@@ -323,7 +359,7 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 				{?>
 				<tr>
 					<td></td>
-					<td colspan = "2" class="alerte">Attention ! Doublon, cet agent a d&eacute;j&agrave; &eacute;t&eacute; ajout&eacute;.</td>
+					<td colspan = "2" class="alerte">Attention ! Doublon, cet agent a d√©j√† √©t√© ajout√©.</td>
 				</tr>
 				<?}
 				?>
@@ -352,14 +388,14 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 						<select name="fintervention">
 							<option value="">...</option>
 								<?
-									//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÈe pour renseigner la liste dÈroulante
+									//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire li√©e pour renseigner la liste d√©roulante
 									$sql_infr = "SELECT id_type_intervention, type_intervention
 									FROM interventions.bib_types_interventions
 									ORDER BY type_intervention";
-									$result = pg_query($sql_infr) or die ("Erreur requÍte") ;
+									$result = pg_query($sql_infr) or die ("Erreur requ√™te") ;
 									while ($val = pg_fetch_assoc($result)){
 								?>
-								<!--  Stocker l'id correspondant ‡ la valeur selectionnÈe. -->
+								<!--  Stocker l'id correspondant √† la valeur selectionn√©e. -->
 							<option value="<?=$val['id_type_intervention'];?>" <?php if ($type_id == $val['id_type_intervention']) : ?>selected <? endif ; ?>><?=$val['type_intervention'];?></option>
 								<? } ?>
 						</select>		
@@ -379,32 +415,27 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 			</div>
 			<div class="blocos">
 				<table width="100%" border="0" cellspacing="5px" cellpadding="5px" align="center">
-				<!-- Ne pas afficher le champ Contrevenant en attendant la declaration CNIL
-				<tr>
-					<td>Contrevenants</td>
-					<td><input type="text" name="fcontrev" size="66"></td>
-		        </tr>
-				-->
 				<tr>
 					<td>Nombre de contrevenants</td>
 					<td><input type="text" name="fnbcontrev" value="<? echo $nbcontrev; ?>"></td>
-		        </tr>
+				</tr>
 				<tr>
 					<td>Observations</td>
 					<td><textarea name="fobs" cols="50" rows="5" ><? echo $obs; ?></textarea></td>
 					<input type="hidden" name="fpartiecachee" value="<? echo $partiecivile; ?>">
-		        </tr>
+					<input type="hidden" name="favocatcachee" value="<? echo $appelavocat; ?>">
+				</tr>
 				</table>
 			</div>
 
-			<!--  Afficher les champs relatifs au suivi si l'utilisateur est rÈfÈrent ou modÈrateur  -->	
+			<!--  Afficher les champs relatifs au suivi si l'utilisateur est r√©f√©rent ou mod√©rateur  -->	
 			<? if ($iddroit == "3" OR $iddroit == "6")
 			{ ?>
 			<div class="blocos">
 				<table width="100%" border="0" cellspacing="5px" cellpadding="5px" align="center">
 				<tr>
 					<td colspan="2">
-						<span class="commentaire">SUIVI DE L'INTERVENTION - SEULEMENT ACCESSIBLE AUX REFERENTS REGLEMENTATION.</span>
+						<span class="commentaire">SUIVI DE L'INTERVENTION - SAISIE SEULEMENT ACCESSIBLE AUX REFERENTS REGLEMENTATION.</span>
 					</td>
 				</tr>
 				<tr>
@@ -414,11 +445,24 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 					</td>
 				</tr>
 				<tr>
-					<td width="20%">Num&eacute;ro du parquet</td>
+					<td width="20%">Num√©ro du parquet</td>
 					<td><input type="text" name="fnumparquet" value="<? echo $numparquet; ?>"></td>
 				</tr>
 				<tr>
-					<td>Suite donn&eacute;e</td>
+					<td width="20%">Date d'audience</td>
+					<td>
+						<input type="text" id="datepicker4" name="fdateaudience" value="<? echo $dateaudience; ?>">
+					</td>
+				</tr>
+				<tr>
+					<td>Appel √† un avocat</td>
+					<td>
+						<input type="radio" name="favocat" value="TRUE" <?php if ($avocat == "t") : ?>checked<? endif ; ?>>Oui
+						<input type="radio" name="favocat" value="FALSE" <?php if ($avocat == "f") : ?>checked<? endif ; ?>>Non	
+					</td>
+				</tr>
+				<tr>
+					<td>Suite donn√©e</td>
 					<td><textarea name="fsuite" cols="50" rows="5" ><? echo $suite; ?></textarea></td>
 		        </tr>
 				<tr>
@@ -443,7 +487,7 @@ $query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limit
 					</td>
 				</tr>
 				<tr>
-					<td>Montant des dommages et int&eacute;r&ecirc;ts</td>
+					<td>Montant des dommages et int√©r√™ts</td>
 					<td>
 						<input type="text" name="fdommages" value="<? echo $amendedommages; ?>">
 						<span class="commentaire"> euros</span/>

@@ -14,7 +14,7 @@
 <? include "menu_general.php" ?>
 
 <?php
-// Générer une variable ORDER BY pour trier les résultats si l'utilisateur a cliqué sur une des colonnes pour trier sur celle-ci
+// GÃ©nÃ©rer une variable ORDER BY pour trier les rÃ©sultats si l'utilisateur a cliquÃ© sur une des colonnes pour trier sur celle-ci
 if (isset($_GET['orderby']))
 {
 $orderby = $_GET['orderby'];
@@ -25,13 +25,13 @@ $orderby = 'datetri DESC, id_intervention DESC';
 
 
 
-// PAGINATION - Vérifier si on est sur la premiere page ou sur une page suivante et compter le nombre total d'enregistrements pour déterminer ensuite le nombre de pages.
+// PAGINATION - VÃ©rifier si on est sur la premiere page ou sur une page suivante et compter le nombre total d'enregistrements pour dÃ©terminer ensuite le nombre de pages.
 if (empty($_GET['debut'])){ $debut=0; }else{ $debut = $_GET['debut']; }
 $i=0;
 $qtotal = requete("SELECT id_intervention FROM interventions.t_interventions");
 $total = pg_numrows($qtotal);
 
-//Declarer la requete listant les enregistrements de la table à lister,
+//Declarer la requete listant les enregistrements de la table Ã  lister,
 	$sqliste = "SELECT id_intervention, to_char(date, 'DD/MM/YYYY') as date, date as datetri, secteur, commune, suivi_num_parquet, suivi_suite_donnee, type_intervention, to_char(date, 'Day') as jour
 	FROM interventions.t_interventions int
 	LEFT JOIN layers.l_communes com ON com.id_commune = int.commune_id
@@ -40,13 +40,13 @@ $total = pg_numrows($qtotal);
 	ORDER BY $orderby
 	LIMIT ".$limite." offset ".$debut."";
 	//Executer la requete
-	$resultliste = pg_query($sqliste) or die ('Échec requête : ' . pg_last_error()) ;
+	$resultliste = pg_query($sqliste) or die ('Ã‰chec requÃªte : ' . pg_last_error()) ;
 	
 	$sqlcompte = "SELECT id_intervention
 	FROM interventions.t_interventions";
 	//Executer la requete
-	$resultcompte = pg_query($sqlcompte) or die ('Échec requête : ' . pg_last_error()) ;
-	//Compter le nombre d'enregistrements renvoyés par la requete
+	$resultcompte = pg_query($sqlcompte) or die ('Ã‰chec requÃªte : ' . pg_last_error()) ;
+	//Compter le nombre d'enregistrements renvoyÃ©s par la requete
 	$nombreint = pg_numrows($resultcompte);
 ?>
 

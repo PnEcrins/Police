@@ -1,4 +1,8 @@
-
+function roundDecimal(nombre, precision){
+    var precision = precision || 2;
+    var tmp = Math.pow(10, precision);
+    return Math.round( nombre*tmp )/tmp;
+}
 
 create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,marqueur) {
     
@@ -35,7 +39,7 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
 		this.carte = new OpenLayers.Map('map_1',options);
 
 		carte.addLayers([fonds, reserves, coeur]);
-
+        
 		return carte;
 	};
 	
@@ -97,10 +101,8 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
 		document.getElementById('fcomm').value = val1 ;
 		document.getElementById('fsect').value = val5 ;
 		document.getElementById('fstatut').value = val2 ;
-		// document.getElementById('longEnd').value = val3 ;
-		// document.getElementById('latEnd').value = val4 ;
-        document.getElementById('longEnd').value = val3 ;
-		document.getElementById('latEnd').value = val4 ;
+        document.getElementById('longEnd').value = roundDecimal(val3,6) ;
+		document.getElementById('latEnd').value = roundDecimal(val4,6) ; ;
         document.getElementById('commentairex').innerHTML = ' - Saisir vos coordonnées en degrés décimaux ou cliquer sur la carte' ;
         document.getElementById('commentairey').innerHTML = ' - Saisir vos coordonnées en degrés décimaux  ou cliquer sur la carte' ;
 	}
@@ -180,10 +182,6 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
                     var point = new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
                     var pointFeature = new OpenLayers.Feature.Vector(point,null);
                     create_ol.intervention.addFeatures(pointFeature);
-                    // if(this.intervention.features[1]){this.intervention.removeFeatures(this.intervention.features[0])};//s'il y a déjà une géométrie, on la supprime pour ne garder que celle qui vient d'être ajoutée
-                    
-                    // alert("You clicked near " + lonlat.lat + " N, " +
-                                              // + lonlat.lon + " E");
                 }
 
             });
@@ -191,6 +189,12 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
             carte.addControl(click);
             click.activate();
             
+            //ajouter le point de localisation d'une intervention existante
+            if(marqueur){
+                var initPoint = new OpenLayers.Geometry.Point(xCentre,yCentre);
+                this.intervention.addFeatures(new OpenLayers.Feature.Vector(initPoint,null));
+            }
+            //centrer la carte avec le bon niveau de zoom
             carte.setCenter(new OpenLayers.LonLat(xCentre,yCentre),zoom,false,true);
 		}
         ,putPoint: function(wms_proj,minX,minY,maxX,maxY){
@@ -207,7 +211,7 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
                 return false;
             }
             if(monPoint4326.y < minY || monPoint4326.y > maxY || monPoint4326.y==null || isNaN(monPoint4326.y)){
-                document.getElementById('commentairey').innerHTML = 'Coordonées en X non valide ou hors zone autorisée' ;
+                document.getElementById('commentairey').innerHTML = 'Coordonées en Y non valide ou hors zone autorisée' ;
                 return false;
             }
             // on construit le point, on le transforme dans la proj de la carte et on l'ajout

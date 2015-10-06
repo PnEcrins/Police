@@ -56,7 +56,7 @@ $comm = $val1['commune'];
 
 <?
 //modifier lors de la migration vers usershub
-$query = "SELECT i.id_intervention, u.nom_role AS nomutilisateur, u.prenom_role AS prenomutilisateur
+$query = "SELECT i.id_intervention, u.nom_role AS nom_role, u.prenom_role AS prenom_role
 FROM interventions.t_interventions i
 JOIN interventions.cor_interventions_agents cia ON cia.intervention_id = i.id_intervention
 JOIN utilisateurs.t_roles u ON u.id_role = cia.utilisateur_id
@@ -80,7 +80,7 @@ $nombreagent = pg_numrows($result);
 				<?  
 				while ($val = pg_fetch_assoc($result)) 
 				{
-				$agent = $val['nomutilisateur'].' '.$val['prenomutilisateur'];
+				$agent = $val['nom_role'].' '.$val['prenom_role'];
 				$id = $val['id_intervention'];
 				?>
 					<tr>
@@ -109,24 +109,24 @@ $nombreagent = pg_numrows($result);
                                     //modifier lors de la migration vers usershub
 									$sql_agent = "SELECT a.* FROM 
                                                     (
-                                                        (SELECT u.id_role AS id_utilisateur, u.nom_role AS nomutilisateur, u.prenom_role AS prenomutilisateur
+                                                        (SELECT u.id_role AS id_utilisateur, u.nom_role, u.prenom_role
                                                         FROM utilisateurs.t_roles u
                                                         JOIN utilisateurs.cor_roles g ON g.id_role_utilisateur = u.id_role
                                                         JOIN utilisateurs.cor_role_menu crm ON crm.id_role = g.id_role_groupe
                                                         WHERE crm.id_menu = 14)
                                                         UNION
-                                                        (SELECT u.id_role AS id_utilisateur, u.nom_role AS nomutilisateur, u.prenom_role AS prenomutilisateur
+                                                        (SELECT u.id_role AS id_utilisateur, u.nom_role, u.prenom_role
                                                         FROM utilisateurs.t_roles u
                                                         JOIN utilisateurs.cor_role_menu crm ON crm.id_role = u.id_role
                                                         WHERE crm.id_menu = 14
                                                         AND u.groupe = false
                                                         )
                                                     ) a
-                                                    ORDER BY a.nomutilisateur";
+                                                    ORDER BY a.nom_role";
 									$result = pg_query($sql_agent) or die ("Erreur requête") ;
 									while ($val = pg_fetch_assoc($result)){
 								?>
-							<option value="<?=$val['id_utilisateur'];?>"><?=$val['nomutilisateur'].' '.' '.$val['prenomutilisateur'];?></option>
+							<option value="<?=$val['id_utilisateur'];?>"><?=$val['nom_role'].' '.' '.$val['prenom_role'];?></option>
 								<? } ?>
 						</select>
 						<input type="hidden" name="finterv" value="<? echo $idinterv; ?>">						

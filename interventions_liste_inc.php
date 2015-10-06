@@ -8,11 +8,11 @@
 						</a>
 						 | 
 						<? } ?>
-						<a href="intervention_recherche.php?num=<?=$num;?>&infraction=<?=$infr;?>&type=<?=$type;?>&secteur=<?=$sect;?>&commune=<?=$com;?>&statut=<?=$statut;?>&agent=<?=$agent;?>&annee=<?=$date;?>" rel="facebox">
+						<a href="intervention_recherche.php?from=liste&num=<?=$num;?>&infraction=<?=$infr;?>&type=<?=$type;?>&secteur=<?=$sect;?>&commune=<?=$com;?>&statut=<?=$statut;?>&agent=<?=$agent;?>&annee=<?=$date;?>" rel="facebox">
 							<img src="images/icones/rechercher.gif" alt="Rechercher une ou des intervention(s)" title="Rechercher une intervention" border="0" align="absmiddle"> Rechercher une ou des intervention(s)
 						</a>
 
-						<!--  Afficher l'option EXPORT XLS si l'utilisateur est référent ou modérateur  -->	
+						<!--  Afficher l'option EXPORT XLS si l'utilisateur est rÃ©fÃ©rent ou modÃ©rateur  -->	
 						<? if ($iddroit == "3" OR $iddroit == "6")
 						{ ?>
 							 | 
@@ -27,29 +27,29 @@
 						Page : <?php paginateur($total,$debut,$limite,$orderby); ?>
 						</p>
 					</tr>
-					<? if ($aucuntri == true) {?> <!--  Si on est sur une liste de résultat filtrée -->	
+					<? if ($aucuntri == true) {?> <!--  Si on est sur une liste de rÃ©sultat filtrÃ©e -->	
                       <tr class="entetetablofiche" height="35">
-						<td width="5%" align="left">N&deg; unique</td>
+						<td width="5%" align="left">NÂ° unique</td>
 						<td width="18%" align="left">Types d'intervention</td>
 						<td width="15%" align="left">Types d'infractions</td>
 						<td width="9%" align="left">Dates</td>
 						<td width="16%" align="left">Secteurs</td>
-						<td width="25%" align="left">Suite donn&eacute;e</td>
+						<td width="25%" align="left">Suite donnÃ©e</td>
 						<td width="12%" align="center">Options</td>
 					</tr>
-                    <? } else { ?> <!--  Si on est sur la liste complète -->	
+                    <? } else { ?> <!--  Si on est sur la liste complÃ¨te -->	
                     <tr class="entetetablofiche" height="35">
-						<td width="5%" align="left"><a href="interventions_liste.php?orderby=id_intervention DESC">N&deg; unique</a></td>
+						<td width="5%" align="left"><a href="interventions_liste.php?orderby=id_intervention DESC">NÂ° unique</a></td>
 						<td width="18%" align="left"><a href="interventions_liste.php?orderby=type_intervention ASC">Types d'intervention</a></td>
 						<td width="15%" align="left">Types d'infractions</td>
 						<td width="9%" align="left"><a href="interventions_liste.php?orderby=datetri DESC">Dates</a></td>
 						<td width="16%" align="left"><a href="interventions_liste.php?orderby=secteur ASC">Secteurs</a></td>
-						<td width="25%" align="left">Suite donn&eacute;e</td>
+						<td width="25%" align="left">Suite donnÃ©e</td>
 						<td width="12%" align="center">Options</td>
 					</tr>
                     <? } ?>
                     
-					<!--  Déclarer les éléments de la table à afficher et boucler tant qu'il y a des résultats dans la requete   -->
+					<!--  DÃ©clarer les Ã©lÃ©ments de la table Ã  afficher et boucler tant qu'il y a des rÃ©sultats dans la requete   -->
 					<?  
 					while ($val = pg_fetch_assoc($resultliste)) 
 					{
@@ -84,8 +84,8 @@
 								WHERE id_intervention = '$id'
 								ORDER BY infraction_id";
 								//Executer la requete
-								$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
-								//Compter le nombre d'enregistrements renvoyés par la requete
+								$result = pg_query($query) or die ('Ã‰chec requÃªte : ' . pg_last_error()) ;
+								//Compter le nombre d'enregistrements renvoyÃ©s par la requete
 								$nombreinfr = pg_numrows($result);
 							while ($val = pg_fetch_assoc($result)) 
 							{
@@ -113,13 +113,22 @@
 								<a href="fiche_intervention.php?id=<?echo $id;?>" rel="facebox"><img src="images/icones/info.gif" alt="Afficher" title="Afficher la fiche compl&egrave;te de l'intervention" border="0" align="absmiddle">
 								</a>
 							<!--  Afficher l'option MODIFIER si l'utilisateur est au moins CONCEPTEUR -->	
-							<? if ($iddroit > "1")
+							<? 
+                            $query = "SELECT utilisateur_id FROM interventions.cor_interventions_agents
+                            WHERE intervention_id = $id
+                            AND utilisateur_id = $id_observateur";
+                            //Executer la requete
+                            $result = pg_query($query) or die ('Ã‰chec requÃªte : ' . pg_last_error()) ;
+                            //Compter le nombre d'enregistrements renvoyÃ©s par la requete
+                            $nb = pg_numrows($result);
+							
+                            if (($iddroit > "1" AND $nb > 0)  OR $iddroit == "3" OR $iddroit == "6")
 							{ ?>
 								| 
 								<a href="edit_intervention_modif.php?id=<?echo $id;?>"><img src="images/icones/modifier.gif" alt="Modifier" title="Modifier l'intervention" border="0" align="absmiddle">
 								</a>
 							<? } ?>
-							<!--  Afficher l'option SUPPRIMER si l'utilisateur est référent ou modérateur  -->	
+							<!--  Afficher l'option SUPPRIMER si l'utilisateur est rÃ©fÃ©rent ou modÃ©rateur  -->	
 							<? if ($iddroit == "3" OR $iddroit == "6")
 							{ ?>
 								 | 
@@ -130,7 +139,7 @@
 						</tr>
 					<? 
 					}
-					//Fermer la connexion à la BD 
+					//Fermer la connexion Ã  la BD 
 					pg_close($dbconn);  
 					?> 
 				</table>

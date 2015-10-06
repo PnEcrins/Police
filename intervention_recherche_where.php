@@ -64,7 +64,7 @@ if ($infr != ""){
 // sur les agents
 if ($agent != ""){
 	// recuperer le nom de l'agent pour l'afficher dans le recapitulatif de recherche
-	$queryinfr = "SELECT * FROM utilisateurs.vue_agents WHERE id_role = '$agent'";
+	$queryinfr = "SELECT * FROM interventions.vue_agents WHERE id_role = '$agent'";
 	$result = pg_query($queryinfr) or die ('Échec requête : ' . pg_last_error()) ;
 	$val = pg_fetch_assoc($result);
 	$nomagent = $val['nom_role'].' '.' '.$val['prenom_role'];

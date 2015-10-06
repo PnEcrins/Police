@@ -7,14 +7,18 @@
 	<? } elseif ($outil_carto == "ol") { ?>
 		<script type="text/javascript" src="js/application.ol.js"></script>
 		<script type="text/javascript" src="js/openlayers/OpenLayers.js"></script>
-        <script type="text/javascript" src="conf/parametres_wms.js"></script>
+		<script type="text/javascript" src="conf/parametres_wms.js"></script>
 	<? } ?>
 </head>
 
 <?php
-	//Declarer la requete listant les enregistrements de la table ‡ lister,
-	$query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat, to_char(suivi_date_limite, 'dd/mm/yyyy') as datlimite, 
-		to_char(date, 'Day') as jour, to_char(suivi_date_constitution, 'dd/mm/yyyy') as suivi_dat_constitution 
+	//Declarer la requete listant les enregistrements de la table √† lister,
+	$query = "SELECT *, 
+			to_char(date, 'dd/mm/yyyy') as dat, 
+			to_char(suivi_date_limite, 'dd/mm/yyyy') as datlimite, 
+			to_char(date, 'Day') as jour, 
+			to_char(suivi_date_constitution, 'dd/mm/yyyy') as suivi_dat_constitution,
+			to_char(suivi_date_audience, 'dd/mm/yyyy') as suivi_dat_audience
 	FROM interventions.t_interventions
 	LEFT JOIN interventions.bib_types_interventions ON id_type_intervention = type_intervention_id
 	LEFT JOIN interventions.bib_statutszone ON id_statutzone = statutzone_id
@@ -22,7 +26,7 @@
 	LEFT JOIN layers.l_secteurs ON id_sect = secteur_id
 	WHERE id_intervention = '$_GET[id]'" ; 
 	//Executer la requete
-	$result = pg_query($query) or die ('…chec requÍte : ' . pg_last_error()) ;
+	$result = pg_query($query) or die ('√âchec requ√™te : ' . pg_last_error()) ;
 
 	$val = pg_fetch_array($result) ;
 		$id = $val['id_intervention'];
@@ -41,29 +45,31 @@
 		$suite = $val['suivi_suite_donnee'];
 		$commentaire = $val['suivi_commentaire'];
 		$partie = $val['suivi_partie_civile'];
+		$avocat = $val['suivi_appel_avocat'];
 		$dateconstitution = $val['suivi_dat_constitution'];
+		$dateaudience = $val['suivi_dat_audience'];
 		$amende = $val['suivi_montant_amende'];
 		$amendedommages = $val['suivi_montant_dommages'];
 		
-		// Si l'outil carto est OpenLayers alors il faut d'abord reprojeter les corrd X et Y qui sont stockÈs en WGS84 dans la BdD 
+		// Si l'outil carto est OpenLayers alors il faut d'abord reprojeter les corrd X et Y qui sont stock√©s en WGS84 dans la BdD 
 		// vers la projection des fonds carto fournis par le WMS.
 		if ($outil_carto == "ol") { 
-		$reproj = "SELECT st_x(Transform(SETSRID(MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS xl2, 
-		st_y(Transform(SETSRID(MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS yl2;";
-		$result = pg_query($reproj) or die ('…chec requÍte : ' . pg_last_error()) ;
+		$reproj = "SELECT st_x(Transform(SETSRID(MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS x_ol, 
+		st_y(Transform(SETSRID(MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS y_ol;";
+		$result = pg_query($reproj) or die ('√âchec requ√™te : ' . pg_last_error()) ;
 		$val = pg_fetch_array($result) ;
 
-		$xl2 = $val['xl2'];
-		$yl2 = $val['yl2'];
+		$x_ol = $val['x_ol'];
+		$y_ol = $val['y_ol'];
 		}
 ?>
 
 <? if ($outil_carto == "gm") { ?>
-<!-- Si l'outil carto utilisÈ est Google Maps alors charger ses fonctions javascripts ‡ l'ouverture de la page -->
-	<body onload="create_gm(<?=$y;?>,<?=$x;?>,13,'<?=$host_url;?>','<?=$racine;?>',false)" onunload="GUnload()">
+<!-- Si l'outil carto utilis√© est Google Maps alors charger ses fonctions javascripts √† l'ouverture de la page -->
+	<body onload="create_gm(<?=$y;?>,<?=$x;?>,13,'<?=$host_url;?>','<?=$racine;?>',true)" onunload="GUnload()">
 <? } elseif ($outil_carto == "ol") { ?>
-<!-- Sinon on charge celles de GoogleMaps -->
-	<body onload="create_ol.init(<?=$xl2;?>,<?=$yl2;?>,'6','<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',false)">
+<!-- Sinon on charge celles de OpenLayers -->
+	<body onload="create_ol.init(<?=$x_ol;?>,<?=$y_ol;?>,'6','<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',true)">
 <? } ?>
 
 <div style="margin: 0 auto; padding: 10px; width: 800px;">
@@ -94,8 +100,8 @@
 			LEFT JOIN interventions.bib_qualification ON id_qualification = qualification_id
 			WHERE id_intervention = '$id'";
 			//Executer la requete
-			$result = pg_query($query) or die ('…chec requÍte : ' . pg_last_error()) ;
-			//Compter le nombre d'enregistrements renvoyÈs par la requete
+			$result = pg_query($query) or die ('√âchec requ√™te : ' . pg_last_error()) ;
+			//Compter le nombre d'enregistrements renvoy√©s par la requete
 			$nombreinfr = pg_numrows($result);
 		?>
 			<table border="0" width="100%" cellspacing="4px" cellpadding="4px" align="center">
@@ -118,7 +124,7 @@
 					<? } ?>
 				<? }else{ ?>
 					<tr>
-						<td colspan="2">Aucune infraction renseign&eacute;e pour cette intervention</td>
+						<td colspan="2">Aucune infraction renseign√©e pour cette intervention</td>
 					</tr>
 				<? } ?>
 			</table>
@@ -126,26 +132,26 @@
 	<hr color="#dcdcdc" > 
 	<p>
 		<?
-			$query = "SELECT i.id_intervention, u.nom_role AS nomutilisateur, u.prenom_role AS prenomutilisateur 
+			$query = "SELECT i.id_intervention, u.nom_role, u.prenom_role 
             FROM interventions.t_interventions i
 			JOIN interventions.cor_interventions_agents cia ON cia.intervention_id = i.id_intervention
 			JOIN utilisateurs.t_roles u ON u.id_role = cia.utilisateur_id
 			WHERE i.id_intervention = '$id'
 			ORDER BY u.nom_role";
 			//Executer la requete
-			$result = pg_query($query) or die ('…chec requÍte : ' . pg_last_error()) ;
-			//Compter le nombre d'enregistrements renvoyÈs par la requete
+			$result = pg_query($query) or die ('√âchec requ√™te : ' . pg_last_error()) ;
+			//Compter le nombre d'enregistrements renvoy√©s par la requete
 			$nombreagent = pg_numrows($result);	
 		?>	
 			<table width="100%" border="0" cellspacing="4px" cellpadding="4px" align="center">
 		        <?  if ($nombreagent > 0){ ?>
 					<tr class="Col1liste" height="30px">
-						<td align="left" class="commentaire">Agent(s) pr&eacute;sent(s)</td>
+						<td align="left" class="commentaire">Agent(s) pr√©sent(s)</td>
 					</tr>
 				<?  
 				while ($val = pg_fetch_assoc($result)) 
 				{
-				$agent = $val['nomutilisateur'].' '.$val['prenomutilisateur'];
+				$agent = $val['nom_role'].' '.$val['prenom_role'];
 				$id = $val['id_intervention'];
 				?>
 					<tr>
@@ -154,7 +160,7 @@
 					<? } ?>
 				<? }else{ ?>
 					<tr>
-						<td>Aucun agent renseign&eacute; pour cette intervention</td>
+						<td>Aucun agent renseign√© pour cette intervention</td>
 					</tr>
 				<? } ?>
 			
@@ -174,31 +180,44 @@
 	<p>
 		<span class="commentaire">Statut de la zone :</span> <? echo $statut ?>
 	</p>
-	<!-- Ne pas afficher le champ Contrevenant en attendant la declaration CNIL
-	<hr color="#dcdcdc" > 
-	<p>
-		<span class="commentaire">Contrevenant(s) :</span> 
-	</p>
-	-->
 	<hr color="#dcdcdc" > 
 	<p>
 		<span class="commentaire">Nombre de contrevenants :</span> <? echo $nbcontrev ?>
 	</p>
+
 	<hr color="#dcdcdc" > 
 	<p>
 		<span class="commentaire">Observations :</span> <? echo $obs ?>
+
 	</p>
+
 	<hr color="#dcdcdc" > 
 	<p>
 		<span class="commentaire">Date limite de prescription :</span> <? echo $datelimite ?>
+
 	</p>
 	<hr color="#dcdcdc" > 
 	<p>
-		<span class="commentaire">Num&eacute;ro du parquet :</span> <? echo $parquet ?>
+		<span class="commentaire">Num√©ro du parquet :</span> <? echo $parquet ?>
+
 	</p>
 	<hr color="#dcdcdc" > 
 	<p>
-		<span class="commentaire">Suite donn&eacute;e :</span> <? echo $suite ?>
+		<span class="commentaire">Date d'audience :</span> <? echo $dateaudience ?>
+
+	</p>
+	<hr color="#dcdcdc" > 
+	<p>
+		<span class="commentaire">Appel √† un avocat :</span> 
+			<?  if ($avocat == "t"){ ?>
+				Oui
+			<? }elseif ($avocat == "f"){ ?>
+				Non
+			<? } ?>
+	</p>
+	<hr color="#dcdcdc" > 
+	<p>
+		<span class="commentaire">Suite donn√©e :</span> <? echo $suite ?>
 	</p>
 	<hr color="#dcdcdc" > 
 	<p>
@@ -209,7 +228,8 @@
 		<span class="commentaire">Constitution de partie civile :</span> 
 			<?  if ($partie == "t"){ ?>
 				Oui
-			<? }else{ ?>
+			<? }elseif ($partie == "f"){ ?>
+
 				Non
 			<? } ?>
 	</p>
@@ -219,7 +239,7 @@
 	</p>
 	<hr color="#dcdcdc" > 
 	<p>
-		<span class="commentaire">Montant des dommages et int&eacute;r&ecirc;ts (euros) :</span> <? echo $amendedommages ?>
+		<span class="commentaire">Montant des dommages et int√©r√™ts (euros) :</span> <? echo $amendedommages ?>
 	</p>
 	<hr color="#dcdcdc" > 
 	<p>
@@ -227,7 +247,7 @@
 	</p>
 	<? $ajd = date("d/m/Y"); ?>
 	<?php
-		//Declarer la requete listant les enregistrements de la table ‡ lister,
+		//Declarer la requete listant les enregistrements de la table √† lister,
 			$query = "SELECT * FROM utilisateurs.t_roles u
 			LEFT JOIN interventions.bib_droits ON id_droit = droit_id
 			WHERE id_role = '".$_SESSION['xauthor']."'  ";
@@ -251,14 +271,14 @@
                         GROUP BY a.id_role, a.nom_role, a.prenom_role
                     ) AS b";
 			//Executer la requete
-			$result = pg_query($query) or die ('…chec requÍte : ' . pg_last_error()) ;
+			$result = pg_query($query) or die ('√âchec requ√™te : ' . pg_last_error()) ;
 			$val = pg_fetch_assoc($result);
 			$nom = $val['nom_role'];
 			$prenom = $val['prenom_role'];
 	?>
 	<hr color="#dcdcdc" > 
 	<p class="droite">
-		<span>Imprim&eacute; le <? echo $ajd ?> par <?echo $prenom .' '.' '. $nom;?>.
+		<span>Imprim√© le <? echo $ajd ?> par <?echo $prenom .' '.' '. $nom;?>.
 	</p>
 </div>
 <?
