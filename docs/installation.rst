@@ -11,7 +11,7 @@ Configuration de la base de données PostgreSQL
 	
 	    cp conf/settings.ini.sample conf/settings.ini
 
-* Mettre à jour la section PostgreSQL du fichier ``conf/settings.ini`` avec vos paramètres de connexion à la base de données :
+* Mettre à jour la section PostgreSQL du fichier ``conf/settings.ini`` avec vos paramètres de connexion à la base de données ainsi que la section ``paramétrage de l'application`` :
 
     :: 
 	

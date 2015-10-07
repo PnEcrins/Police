@@ -15,8 +15,8 @@
 						<!--  Afficher l'option EXPORT XLS si l'utilisateur est référent ou modérateur  -->	
 						<? if ($iddroit == "3" OR $iddroit == "6")
 						{ ?>
-							 | 
-							<a href="popup_xls.php" title="Export vers Excel" rel="facebox">
+
+							<a href="popup_xls.php?num=<? echo $num;?>&infr=<? echo $infr;?>&date=<? echo $date;?>&sect=<? echo $sect;?>&com=<? echo $com;?>&type=<? echo $type;?>&agent=<? echo $agent;?>&statut=<? echo $statut;?>" title="Export vers Excel" rel="facebox">
 								<img src="images/icones/excel.png" alt="Exporter la liste" border="0" align="absmiddle"> Exporter vers Excel
 							</a>
 						<? } ?>

@@ -1,5 +1,5 @@
-<? include "verification.php" ?>
-<?
+<? include "verification.php";
+$where = $_GET['where'];
 //Premiere ligne = nom des champs (sans accents car ça posait un pb de codage)
 $csv_output = "N° intervention\tDate\tJour\tInfraction\tQualification\tType d'intervention\tAgents présents\tCommune\tSecteur\tStatut de la zone\tX (WGS84)\tY (WGS84)\tObservation\tNombre de contrevenants\tDate limite de prescription\tNuméro de parquet\tDate d'audience\tAppel à un avocat\tSuite donnée\tCommentaire de suivi\tMontant de l'amende\tConstitution de partie civile\tDate de la constitution\tMontant des dommages et intérêts";
 //Aller à la ligne
@@ -31,14 +31,38 @@ SELECT interv.id_intervention,
 		interv.suivi_partie_civile, 
 		interv.suivi_date_constitution, 
 		interv.suivi_montant_dommages
-	FROM interventions.t_interventions interv
+FROM interventions.t_interventions interv
 	LEFT JOIN interventions.cor_interventions_infractions corinf ON corinf.intervention_id = interv.id_intervention
 	LEFT JOIN interventions.bib_infractions inf ON inf.id_infraction = corinf.infraction_id
 	LEFT JOIN interventions.bib_qualification qualif ON qualif.id_qualification = corinf.qualification_id
 	LEFT JOIN interventions.bib_statutszone stat ON stat.id_statutzone = interv.statutzone_id
 	LEFT JOIN interventions.bib_types_interventions typeint ON typeint.id_type_intervention = interv.type_intervention_id
+    LEFT JOIN interventions.cor_interventions_agents ag ON ag.intervention_id = interv.id_intervention
 	LEFT JOIN layers.l_communes comm ON comm.id_commune = interv.commune_id
 	LEFT JOIN layers.l_secteurs sect ON sect.id_sect = interv.secteur_id
+$where
+GROUP BY interv.id_intervention, 
+		interv.date, 
+		comm.commune, 
+		sect.secteur, 
+		stat.statutzone, 
+		typeint.type_intervention, 
+		inf.infraction, 
+		qualif.qualification, 
+		interv.observation, 
+		interv.coord_x, 
+		interv.coord_y, 
+		interv.nbcontrevenants, 
+		interv.suivi_date_limite, 
+		interv.suivi_num_parquet, 
+		interv.suivi_date_audience, 
+		interv.suivi_appel_avocat, 
+		interv.suivi_suite_donnee, 
+		interv.suivi_commentaire, 
+		interv.suivi_montant_amende, 
+		interv.suivi_partie_civile, 
+		interv.suivi_date_constitution, 
+		interv.suivi_montant_dommages
 ORDER BY interv.date;
 ";
 $result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
@@ -59,10 +83,10 @@ while($row = pg_fetch_assoc($result)) {
 	//Boucle sur les n agents présents lors de l'intervention
 	$agent = ""; // Réinitialiser la variable 
 	$queryagent = "
-		SELECT ag.id_role, ag.nom_role, ag.prenom_role, interv.id_intervention
+		SELECT u.id_role, u.nom_role, u.prenom_role, interv.id_intervention
 		FROM interventions.t_interventions interv
 		LEFT JOIN interventions.cor_interventions_agents corag ON corag.intervention_id = interv.id_intervention
-		LEFT JOIN interventions.vue_agents ag ON ag.id_role = corag.utilisateur_id
+		LEFT JOIN utilisateurs.t_roles u ON u.id_role = corag.utilisateur_id
 		WHERE interv.id_intervention = $row[id_intervention];
 	";
 	$resultagent = pg_query($queryagent) or die ('Échec requête : ' . pg_last_error()) ;

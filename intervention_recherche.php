@@ -36,14 +36,14 @@ $source = $_GET['from']
 									<select name="rinfr">
 										<option value="">...</option>
 											<?
-												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÈe pour renseigner la liste dÈroulante
+												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire li√©e pour renseigner la liste d√©roulante
 												$sql_infr = "SELECT id_infraction , infraction
 												FROM interventions.bib_infractions 
 												ORDER BY infraction";
-												$result = pg_query($sql_infr) or die ("Erreur requÍte") ;
+												$result = pg_query($sql_infr) or die ("Erreur requ√™te") ;
 												while ($val = pg_fetch_assoc($result)){
 											?>
-											<!--  Stocker l'id correspondant ‡ la valeur selectionnÈe. Selectionner par dÈfaut la valeur correspondant ‡ l'enregistrement ‡ modifier  -->
+											<!--  Stocker l'id correspondant √† la valeur selectionn√©e. Selectionner par d√©faut la valeur correspondant √† l'enregistrement √† modifier  -->
 										<option value="<?=$val['id_infraction'];?>" <?php if ($_GET[infraction] == $val['id_infraction']) : ?>selected <? endif ; ?>><?=$val['infraction'];?></option>
 											<? } ?>
 									</select>
@@ -55,14 +55,14 @@ $source = $_GET['from']
 									<select name="rtype">
 										<option value="">...</option>
 											<?
-												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÈe pour renseigner la liste dÈroulante
+												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire li√©e pour renseigner la liste d√©roulante
 												$sql_infr = "SELECT id_type_intervention, type_intervention
 												FROM interventions.bib_types_interventions
 												ORDER BY type_intervention";
-												$result = pg_query($sql_infr) or die ("Erreur requÍte") ;
+												$result = pg_query($sql_infr) or die ("Erreur requ√™te") ;
 												while ($val = pg_fetch_assoc($result)){
 											?>
-											<!--  Stocker l'id correspondant ‡ la valeur selectionnÈe. Selectionner par dÈfaut la valeur correspondant ‡ l'enregistrement ‡ modifier  -->
+											<!--  Stocker l'id correspondant √† la valeur selectionn√©e. Selectionner par d√©faut la valeur correspondant √† l'enregistrement √† modifier  -->
 										<option value="<?=$val['id_type_intervention'];?>" <?php if ($_GET[type] == $val['id_type_intervention']) : ?>selected <? endif ; ?>><?=$val['type_intervention'];?></option>
 											<? } ?>
 									</select>
@@ -74,14 +74,14 @@ $source = $_GET['from']
 									<select name="rsect">
 										<option value="">...</option>
 											<?
-												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÈe pour renseigner la liste dÈroulante
+												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire li√©e pour renseigner la liste d√©roulante
 												$sql_sect = "SELECT id_sect, secteur
 												FROM layers.l_secteurs 
 												ORDER BY secteur";
-												$resultsect = pg_query($sql_sect) or die ("Erreur requÍte") ;
+												$resultsect = pg_query($sql_sect) or die ("Erreur requ√™te") ;
 												while ($val = pg_fetch_assoc($resultsect)){
 											?>
-											<!--  Stocker l'id correspondant ‡ la valeur selectionnÈe. Selectionner par dÈfaut la valeur correspondant ‡ l'enregistrement ‡ modifier  -->
+											<!--  Stocker l'id correspondant √† la valeur selectionn√©e. Selectionner par d√©faut la valeur correspondant √† l'enregistrement √† modifier  -->
 										<option value="<?=$val['id_sect'];?>" <?php if ($_GET[secteur] == $val['id_sect']) : ?>selected <? endif ; ?>><?=$val['secteur'];?></option>
 											<? } ?>
 									</select>
@@ -93,14 +93,14 @@ $source = $_GET['from']
 									<select name="rcom">
 										<option value="">...</option>
 											<?
-												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÈe pour renseigner la liste dÈroulante
+												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire li√©e pour renseigner la liste d√©roulante
 												$sql_com = "SELECT id_commune, commune
 												FROM layers.l_communes 
 												ORDER BY commune";
-												$resultcom = pg_query($sql_com) or die ("Erreur requÍte") ;
+												$resultcom = pg_query($sql_com) or die ("Erreur requ√™te") ;
 												while ($val = pg_fetch_assoc($resultcom)){
 											?>
-											<!--  Stocker l'id correspondant ‡ la valeur selectionnÈe. Selectionner par dÈfaut la valeur correspondant ‡ l'enregistrement ‡ modifier  -->
+											<!--  Stocker l'id correspondant √† la valeur selectionn√©e. Selectionner par d√©faut la valeur correspondant √† l'enregistrement √† modifier  -->
 											<option value="<?=$val['id_commune'];?>" <?php if ($_GET[commune] == $val['id_commune']) : ?>selected <? endif ; ?>><?=$val['commune'];?></option>
 											<? } ?>
 									</select>
@@ -112,26 +112,26 @@ $source = $_GET['from']
 									<select name="rstatut">
 										<option value="">...</option>
 											<?
-												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÈe pour renseigner la liste dÈroulante
+												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire li√©e pour renseigner la liste d√©roulante
 												$sql_statut = "SELECT id_statutzone, statutzone, ordre
 												FROM interventions.bib_statutszone
 												ORDER BY ordre";
-												$resultstatut = pg_query($sql_statut) or die ("Erreur requÍte") ;
+												$resultstatut = pg_query($sql_statut) or die ("Erreur requ√™te") ;
 												while ($val = pg_fetch_assoc($resultstatut)){
 											?>
-											<!--  Stocker l'id correspondant ‡ la valeur selectionnÈe. Selectionner par dÈfaut la valeur correspondant ‡ l'enregistrement ‡ modifier  -->
+											<!--  Stocker l'id correspondant √† la valeur selectionn√©e. Selectionner par d√©faut la valeur correspondant √† l'enregistrement √† modifier  -->
 										<option value="<?=$val['id_statutzone'];?>" <?php if ($_GET[statut] == $val['id_statutzone']) : ?>selected <? endif ; ?>><?=$val['statutzone'];?></option>
 											<? } ?>
 									</select>
 								</td>
 							</tr>
 							<tr>
-								<td class="commentaire">Agent pr&eacute;sent </td>
+								<td class="commentaire">Agent pr√©sent </td>
 								<td>
 									<select name="ragent">
 										<option value="">...</option>
 											<?
-												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÈe pour renseigner la liste dÈroulante
+												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire li√©e pour renseigner la liste d√©roulante
 												$sql_agent = "SELECT a.* FROM 
                                                     (
                                                         (SELECT u.id_role, u.nom_role, u.prenom_role
@@ -148,29 +148,29 @@ $source = $_GET['from']
                                                         )
                                                     ) a
                                                    ORDER BY a.nom_role";
-												$resultagent = pg_query($sql_agent) or die ("Erreur requÍte") ;
+												$resultagent = pg_query($sql_agent) or die ("Erreur requ√™te") ;
 												while ($val = pg_fetch_assoc($resultagent)){
 											?>
-											<!--  Stocker l'id correspondant ‡ la valeur selectionnÈe. Selectionner par dÈfaut la valeur correspondant ‡ l'enregistrement ‡ modifier  -->
+											<!--  Stocker l'id correspondant √† la valeur selectionn√©e. Selectionner par d√©faut la valeur correspondant √† l'enregistrement √† modifier  -->
 										<option value="<?=$val['id_role'];?>" <?php if ($_GET[agent] == $val['id_role']) : ?>selected <? endif ; ?>><?=$val['nom_role'].' '.' '.$val['prenom_role'];?></option>
 											<? } ?>
 									</select>
 								</td>
 							</tr>
 							<tr>
-								<td class="commentaire">Ann&eacute;e </td>
+								<td class="commentaire">Ann√©e </td>
 								<td>
 									<select name="rdate">
 										<option value="">...</option>
 											<?
-												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÈe pour renseigner la liste dÈroulante
+												//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire li√©e pour renseigner la liste d√©roulante
 												$sql_an = "SELECT distinct extract(year from date) as annee
 												FROM interventions.t_interventions
 												ORDER BY extract(year from date)";
-												$resultan = pg_query($sql_an) or die ("Erreur requÍte") ;
+												$resultan = pg_query($sql_an) or die ("Erreur requ√™te") ;
 												while ($val = pg_fetch_assoc($resultan)){
 											?>
-											<!--  Stocker l'id correspondant ‡ la valeur selectionnÈe. Selectionner par dÈfaut la valeur correspondant ‡ l'enregistrement ‡ modifier  -->
+											<!--  Stocker l'id correspondant √† la valeur selectionn√©e. Selectionner par d√©faut la valeur correspondant √† l'enregistrement √† modifier  -->
 
 										<option value="<?=$val['annee'];?>" <?php if ($_GET[annee] == $val['annee']) : ?>selected <? endif ; ?>><?=$val['annee'];?></option>
 											<? } ?>
