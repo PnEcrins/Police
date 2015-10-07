@@ -31,6 +31,8 @@ Création de la base de données
     
         cd /home/police/police
         sudo ./install_db.sh
+        
+* Vous pouvez consulter le fichier ``log/install_db.log`` afin de vérifier si des errreurs se sont produites lors de l'installation de la base de données
 
 * Si besoin, l'exemple des données SIG du Parc national des Ecrins pour les tables du schéma ``layers``
   
@@ -50,9 +52,9 @@ Configuration de l'application
 	    cd /home/police/police
         ./install_app.sh
         
-* Editer et vérifier dans le fichier ``conf/connecter.php`` que vos paramètres de connexion à la BDD sont corrects :
+* Editer et vérifier dans le fichier ``conf/connecter.php`` que vos paramètres de connexion à la BDD sont corrects.
         
-* Editer et mettre à jour le fichier ``conf/parametres.php`` avec vos paramètres :
+* Editer et mettre à jour le fichier ``conf/parametres.php`` avec vos paramètres. Vous devez notamment fournir l'url du serveur wms afin d'afficher les fond de cartes. Vous devez aussi configurer les valeurs des emprises de votre territoire.
         
 * Si vous souhaitez mettre à disposition des utilisateurs des documents, éditer et mettre à jour le fichier ``documents_liste.php``.
 
