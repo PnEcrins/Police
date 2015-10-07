@@ -113,12 +113,12 @@ $nombreagent = pg_numrows($result);
                                                         FROM utilisateurs.t_roles u
                                                         JOIN utilisateurs.cor_roles g ON g.id_role_utilisateur = u.id_role
                                                         JOIN utilisateurs.cor_role_menu crm ON crm.id_role = g.id_role_groupe
-                                                        WHERE crm.id_menu = 14)
+                                                        WHERE crm.id_menu = $id_menu)
                                                         UNION
                                                         (SELECT u.id_role AS id_utilisateur, u.nom_role, u.prenom_role
                                                         FROM utilisateurs.t_roles u
                                                         JOIN utilisateurs.cor_role_menu crm ON crm.id_role = u.id_role
-                                                        WHERE crm.id_menu = 14
+                                                        WHERE crm.id_menu = $id_menu
                                                         AND u.groupe = false
                                                         )
                                                     ) a
