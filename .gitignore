@@ -1,6 +1,7 @@
 *.*~
 conf/connecter.php
 conf/parametres.php
+conf/settings.ini
 documents_liste.php
 documents/bilans/*.*
 documents/instructions/*.*

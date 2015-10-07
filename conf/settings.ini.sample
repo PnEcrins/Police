@@ -23,7 +23,7 @@ admin_pg_pass=monpassachanger
 #identifiant de l'application
 #cet identifiant est utilisé principalement en lien avec les droits et les menus des utilisateurs
 #il doit correspondre à celui enregistré dans la table utilisateurs.t_applications
-id_application=1
+id_application=3
 
 #identifiant du menu agents
 #cet identifiant est utilisé pour construire les menus des agents présents lors d'une constatation d'infraction
