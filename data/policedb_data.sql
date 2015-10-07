@@ -153,14 +153,14 @@ INSERT INTO t_roles (groupe, id_role, identifiant, nom_role, prenom_role, desc_r
 -- Data for Name: cor_role_droit_application; Type: TABLE DATA; Schema: utilisateurs; Owner: geonatuser
 -- 
 INSERT INTO cor_role_droit_application (id_role, id_droit, id_application) VALUES (1, 6, 1);
-INSERT INTO cor_role_droit_application (id_role, id_droit, id_application) VALUES (20002, 3, 3);
+INSERT INTO cor_role_droit_application (id_role, id_droit, id_application) VALUES (20002, 2, 3);
 INSERT INTO cor_role_droit_application (id_role, id_droit, id_application) VALUES (1, 6, 3);
 -- 
 -- TOC entry 3279 (class 0 OID 17845)
 -- Dependencies: 263
 -- Data for Name: t_menus; Type: TABLE DATA; Schema: utilisateurs; Owner: geonatuser
 -- 
-INSERT INTO t_menus (id_menu, nom_menu, desc_menu, id_application) VALUES (1, 'Police - Agents', 'listes des observateurs faune', 3);
+INSERT INTO t_menus (id_menu, nom_menu, desc_menu, id_application) VALUES (1, 'Police - Agents', 'listes des agents de constation', 3);
 
 -- 
 -- TOC entry 3253 (class 0 OID 17437)

@@ -11,7 +11,7 @@ Configuration de la base de données PostgreSQL
 	
 	    cp conf/settings.ini.sample conf/settings.ini
 
-* Mettre à jour le fichier ``conf/settings.ini`` avec vos paramètres de connexion à la BDD :
+* Mettre à jour la section PostgreSQL du fichier ``conf/settings.ini`` avec vos paramètres de connexion à la base de données :
 
     :: 
 	
@@ -19,7 +19,7 @@ Configuration de la base de données PostgreSQL
 
 Renseigner le nom de la base de données, les utilisateurs PostgreSQL et les mots de passe. Il est possible mais non conseillé de laisser les valeurs proposées par défaut. 
 
-ATTENTION : Les valeurs renseignées dans ce fichier sont utilisées par le script d'installation de la base de données ``install_db.sh``. Les utilisateurs PostgreSQL doivent être en concordance avec ceux créés lors de la dernière étape de l'installation du serveur (Création de 2 utilisateurs PostgreSQL). 
+ATTENTION : Les valeurs renseignées dans ce fichier sont utilisées par le script d'installation de la base de données ``install_db.sh``. Les utilisateurs PostgreSQL doivent exister (et disposer de droits suffisants) ou être en concordance avec ceux créés lors de la dernière étape de l'installation du serveur (Création de 2 utilisateurs PostgreSQL). 
 
 
 Création de la base de données
@@ -29,7 +29,7 @@ Création de la base de données
 
     ::
     
-        cd /home/monuser/police
+        cd /home/police/police
         sudo ./install_db.sh
 
 * Si besoin, l'exemple des données SIG du Parc national des Ecrins pour les tables du schéma ``layers``
@@ -41,50 +41,22 @@ Création de la base de données
 
 Configuration de l'application
 ==============================
-* Se loguer sur le serveur avec l'utilisateur propriétaire du répertoire de l'application
+* Se loguer sur le serveur avec l'utilisateur ``police``
 
-* Se placer dans le répertoire de l'application
-
-* Copier et renommer le fichier ``conf/connecter.php.sample`` en ``conf/connecter.php`` :
+* Se placer dans le répertoire de l'application et lancer le script d'installation de l'application ``install_app.sh`` :
 
     :: 
 	
-	    cp conf/connecter.php.sample conf/connecter.php
+	    cd /home/police/police
+        ./install_app.sh
         
-* Copier et renommer le fichier ``conf/parametres.php.sample`` en ``conf/parametres.php`` :
-
-    :: 
-	
-	    cp conf/parametres.php.sample conf/parametres.php
-
-* Copier et renommer le fichier ``documents_liste.php.sample`` en ``documents_liste.php`` :
-
-    :: 
-	
-	    cp documents_liste.php.sample documents_liste.php
+* Editer et vérifier dans le fichier ``conf/connecter.php`` que vos paramètres de connexion à la BDD sont corrects :
         
-* Mettre à jour le fichier ``conf/connecter.php`` avec vos paramètres de connexion à la BDD :
-
-    :: 
-	
-	    nano conf/connecter.php
+* Editer et mettre à jour le fichier ``conf/parametres.php`` avec vos paramètres :
         
-* Mettre à jour le fichier ``conf/parametres.php`` avec vos paramètres de connexion à la BDD :
+* Si vous souhaitez mettre à disposition des utilisateurs des documents, éditer et mettre à jour le fichier ``documents_liste.php``.
 
-    :: 
-	
-	    nano conf/parametres.php
-        
-* Mettre à jour le fichier ``documents_liste.php`` avec vos paramètres de connexion à la BDD :
-
-    :: 
-	
-	    nano documents_liste.php
-        
-
-   
-
-* Installation et configuration de l'application
+Vos documents doivent être placés dans le répertoire ``documents`` il vous suffit ensuite de modifier le fichier ``documents_liste.php`` pour faire pointer les liens vers vos documents.
 
 * Pour tester, se connecter à l'application via http://mon-domaine.fr/police avec l'utilisateur et mot de passe : ``admin/admin``
 

@@ -342,7 +342,64 @@ SET search_path = interventions, pg_catalog;
 --
 
 CREATE VIEW vue_agents AS
-    SELECT a.groupe, a.id_role, a.identifiant, a.nom_role, a.prenom_role, a.desc_role, a.pass, a.email, a.organisme, a.id_unite, a.pn, a.session_appli, a.date_insert, a.date_update, max(a.id_droit) AS id_droit_police FROM (SELECT u.groupe, u.id_role, u.identifiant, u.nom_role, u.prenom_role, u.desc_role, u.pass, u.email, u.organisme, u.id_unite, u.pn, u.session_appli, u.date_insert, u.date_update, u.id_organisme, u.remarques, c.id_droit FROM (utilisateurs.t_roles u JOIN utilisateurs.cor_role_droit_application c ON ((c.id_role = u.id_role))) WHERE (c.id_application = 22) UNION SELECT u.groupe, u.id_role, u.identifiant, u.nom_role, u.prenom_role, u.desc_role, u.pass, u.email, u.organisme, u.id_unite, u.pn, u.session_appli, u.date_insert, u.date_update, u.id_organisme, u.remarques, c.id_droit FROM ((utilisateurs.t_roles u JOIN utilisateurs.cor_roles g ON ((g.id_role_utilisateur = u.id_role))) JOIN utilisateurs.cor_role_droit_application c ON ((c.id_role = g.id_role_groupe))) WHERE (c.id_application = 22)) a GROUP BY a.groupe, a.id_role, a.identifiant, a.nom_role, a.prenom_role, a.desc_role, a.pass, a.email, a.organisme, a.id_unite, a.pn, a.session_appli, a.date_insert, a.date_update;
+  SELECT a.groupe,
+    a.id_role,
+    a.identifiant,
+    a.nom_role,
+    a.prenom_role,
+    a.desc_role,
+    a.pass,
+    a.email,
+    a.organisme,
+    a.id_unite,
+    a.pn,
+    a.session_appli,
+    a.date_insert,
+    a.date_update,
+    max(a.id_droit) AS id_droit_police
+  FROM ( SELECT u.groupe,
+            u.id_role,
+            u.identifiant,
+            u.nom_role,
+            u.prenom_role,
+            u.desc_role,
+            u.pass,
+            u.email,
+            u.organisme,
+            u.id_unite,
+            u.pn,
+            u.session_appli,
+            u.date_insert,
+            u.date_update,
+            u.id_organisme,
+            u.remarques,
+            c.id_droit
+           FROM utilisateurs.t_roles u
+             JOIN utilisateurs.cor_role_droit_application c ON c.id_role = u.id_role
+          WHERE c.id_application = 3 AND u.groupe = false
+        UNION
+         SELECT u.groupe,
+            u.id_role,
+            u.identifiant,
+            u.nom_role,
+            u.prenom_role,
+            u.desc_role,
+            u.pass,
+            u.email,
+            u.organisme,
+            u.id_unite,
+            u.pn,
+            u.session_appli,
+            u.date_insert,
+            u.date_update,
+            u.id_organisme,
+            u.remarques,
+            c.id_droit
+           FROM utilisateurs.t_roles u
+             JOIN utilisateurs.cor_roles g ON g.id_role_utilisateur = u.id_role
+             JOIN utilisateurs.cor_role_droit_application c ON c.id_role = g.id_role_groupe
+          WHERE c.id_application = 3) a
+  GROUP BY a.groupe, a.id_role, a.identifiant, a.nom_role, a.prenom_role, a.desc_role, a.pass, a.email, a.organisme, a.id_unite, a.pn, a.session_appli, a.date_insert, a.date_update;
 
 
 ALTER TABLE interventions.vue_agents OWNER TO policeuser;

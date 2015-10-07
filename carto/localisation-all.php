@@ -62,17 +62,17 @@ function load() {
 	<? } ?>
 	// Afficher le coeur du PnE (fichier KML)
 	var coeurXML;
-	var url= "http://cartotest.ecrins-parcnational.fr/police/carto/gm-kml/coeur-pne-wgs84.kml";
+	var url= "<?echo $host_url.'/'.$racine;?>/carto/gm-kml/coeur-pne-wgs84.kml";
 	coeurXML = new google.maps.GeoXml(url);
 	map1.addOverlay(coeurXML);
 	// Afficher l'AOA du PnE (fichier KML)
 	var aoaXML;
-	var url= "http://cartotest.ecrins-parcnational.fr/police/carto/gm-kml/aoa-pne-wgs84.kml";
+	var url= "<?echo $host_url.'/'.$racine;?>/carto/gm-kml/aoa-pne-wgs84.kml";
 	aoaXML = new google.maps.GeoXml(url);
 	map1.addOverlay(aoaXML);
 	// Afficher les réserves du PnE (fichier KML)
 	var reservesXML;
-	var url= "http://cartotest.ecrins-parcnational.fr/police/carto/gm-kml/reserves-pne-wgs84.kml";
+	var url= "<?echo $host_url.'/'.$racine;?>/carto/gm-kml/reserves-pne-wgs84.kml";
 	reservesXML = new google.maps.GeoXml(url);
 	map1.addOverlay(reservesXML);
 }

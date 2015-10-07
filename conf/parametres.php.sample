@@ -6,8 +6,10 @@
 
 // identifiant de l'application dans UsersHub ou dans la table utilisateurs.t_applications
 $id_application = 3;
+// identifiant du menu agents dans UsersHub ou dans la table utilisateurs.t_menus
+$id_menu = 1;
 // Domaine où est installée l'application
-$host_url = "http://mondomaine.fr";
+$host_url = 'http://mondomaine.fr';
 // Chemin vers l'application à partir de la racine du répertoire de publication du serveur web (exemple : /police_ecrins/ ou encore /applis_metier/police/vanoise/)
 $racine = "/police/";
 // Nom de l'établissement utilisant l'application (pensez à coder les accents et caracteres spéciaux : http://alexandre.alapetite.fr/doc-alex/alx_special.html)

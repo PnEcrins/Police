@@ -1,4 +1,4 @@
-#config PostgreSQL
+############config PostgreSQL############
 
 #effacer la base de donnée existante lors de l'installation
 drop_apps_db=false
@@ -17,3 +17,19 @@ user_pg_pass=monpassachanger
 
 #superuser de la base policedb
 admin_pg_pass=monpassachanger
+
+############paramétrage de l'application############
+
+#identifiant de l'application
+#cet identifiant est utilisé principalement en lien avec les droits et les menus des utilisateurs
+#il doit correspondre à celui enregistré dans la table utilisateurs.t_applications
+id_application=1
+
+#identifiant du menu agents
+#cet identifiant est utilisé pour construire les menus des agents présents lors d'une constatation d'infraction
+#il doit correspondre à celui enregistré dans la table utilisateurs.t_menus
+id_menu=1
+
+#nom du domaine ou adresse ip où l'application est installée
+#il s'agit de la racine de l'url permettant d'accéder à l'application
+host_url=http://mondomaine.fr;

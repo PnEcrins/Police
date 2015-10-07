@@ -16,6 +16,11 @@ sed -i "s/user ='policeuser';/user ='$user_pg';/g" conf/connecter.php
 sed -i "s/passe='monpassachanger';/passe='$user_pg_pass';/g" conf/connecter.php
 sed -i "s/base='policedb';/base='$db_name';/g" conf/connecter.php
 
+echo "configuration du fichier conf/parametres.php..."
+sed -i "s/id_application = 3;/id_application = $id_application;/g" conf/parametres.php
+sed -i "s/id_menu = 1;/id_menu = $id_menu;/g" conf/parametres.php
+sed -i "s/host_url = 'http://mondomaine.fr';/host_url = '$host_url';/g" conf/parametres.php
+
 echo "Suppression des fichier de log de l'installation..."
 rm log/*.log
 
