@@ -29,7 +29,7 @@ Celle-ci permet de centraliser les utilisateurs et observateurs, de les ajouter 
 Installation
 ------------
 
-Consulter la documentation :  `<http://police.rtfd.org>` --> TODO
+Consulter la documentation :  http://police.rtfd.org
 
 License
 -------
