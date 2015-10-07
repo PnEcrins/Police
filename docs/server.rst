@@ -30,7 +30,7 @@ Il est possible de faire l'installation de l'application sur un serveur existant
         cd /tmp
         wget https://github.com/PnEcrins/Police/archive/master.zip
         unzip master.zip
-        cp -R Police-master /home/police/police
+        cp -R Police-master /home/police/Police
         cd /home/police
 
 
