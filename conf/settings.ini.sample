@@ -32,4 +32,4 @@ id_menu=1
 
 #nom du domaine ou adresse ip où l'application est installée
 #il s'agit de la racine de l'url permettant d'accéder à l'application
-host_url=http://mondomaine.fr;
+host_url=http://mondomaine.fr
