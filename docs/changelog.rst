@@ -21,6 +21,8 @@ CHANGELOG
 * Ajout des champs `DATE AUDIENCE` et `APPEL AVOCAT` (dans les formulaire d'ajout/modification, dans les fiches de visualisation d'une intervention et dans les export XLS).
 * La recherche que l'on pouvait déjà faire dans la liste des interventions est maintenant aussi possible dans l'onglet CARTO (reste quelques ajustements à faire sur cette page).
 * Les exports correspondent aux résultats de la recherche et non plus à la liste de toutes les interventions (fixes (fixes https://github.com/PnEcrins/Police/issues/2)
+* L'application est désormais compatible avec PostGIS 2 (https://github.com/PnEcrins/Police/commit/ca9ecaf511016bb1f11f8e7d63a54c1f82585488)
+* Documentation et automatisation de l'installation de l'application et de la BDD (https://github.com/PnEcrins/Police/tree/master/docs)
 
 **Correction de bugs**
 
