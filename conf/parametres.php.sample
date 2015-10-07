@@ -30,6 +30,10 @@ $ref_ajout_agent = "non";
 $ref_edit_agent = "non";
 // Permettre au référent de réinitialiser le mot de passe des agents. Valeurs possibles : oui OU non
 $ref_mdp_agent = "non";
+// Afficher ou non l'onglet de gestion des agents. Valeurs possibles : oui OU non
+// Cette fonctionnalité n'est pas encore totalement compatible avec le schéma utilisateurs de l'appplication. 
+// Il est fortement conseillé de la laisser à non et de gérer les utilisateurs avec UsersHub
+$acces_agents = "non";
 // Permettre à tous les utilisateurs d'accéder à la rubrique DOCUMENTS mettant à disposition des documents de référence concernant la mission POLICE. Valeurs possibles : oui OU non
 $acces_documents = "oui";
 // Nombre d'interventions affichées par page. 

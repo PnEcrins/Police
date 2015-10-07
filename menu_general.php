@@ -53,10 +53,11 @@ require("conf/parametres.php");
 			<li><a href="<?= $racine; ?>accueil.php" class="rouge">Accueil</a></li>
 			<li><a href="<?= $racine; ?>interventions_liste.php" class="orange">Interventions</a></li>
 			<li><a href="<?= $racine; ?>carto.php?an=<? echo "$an" ?>" class="rouge">Carto</a></li>
-			<li><a href="<?= $racine; ?>documents_liste.php" class="orange">Documents</a></li>
+			<? if ($acces_documents == "oui"){ ?>
+            <li><a href="<?= $racine; ?>documents_liste.php" class="orange">Documents</a></li>
+            <? } ?>
 			<!--  Afficher l'onglet AGENTS si l'utilisateur est référent ou modérateur  -->	
-			<? if ($iddroit == "3" OR $iddroit == "6")
-			{ ?>
+			<? if ($iddroit == "3" OR $iddroit == "6" AND $acces_agents=="oui"){ ?>
 				<li><a href="<?= $racine; ?>agents_liste.php" class="rouge">Agents</a></li>
 			<? } ?>
 		</ul>
