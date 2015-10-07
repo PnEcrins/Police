@@ -11,7 +11,7 @@ else { $nbcontrev = $_POST[fnbcontrev] ;
 //correction des magic_quotes_gpc (protection des chaînes de caractères)
 $observation = pg_escape_string($_POST[fobs]);
 $query= "INSERT INTO interventions.t_interventions (date, type_intervention_id, commune_id, secteur_id, coord_x, coord_y, statutzone_id, observation, nbcontrevenants, the_geom) 
-VALUES(to_date('$_POST[fdate]','dd/mm/yyyy'),'$_POST[fintervention]','$_POST[fcomm]', '$_POST[fsect]','$_POST[fx]','$_POST[fy]','$_POST[fstatut]','$observation', $nbcontrev, Transform(SETSRID(MakePoint('$_POST[fx]', '$_POST[fy]'),4326), $wms_proj))";
+VALUES(to_date('$_POST[fdate]','dd/mm/yyyy'),'$_POST[fintervention]','$_POST[fcomm]', '$_POST[fsect]','$_POST[fx]','$_POST[fy]','$_POST[fstatut]','$observation', $nbcontrev, ST_Transform(ST_SetSrid(ST_MakePoint('$_POST[fx]', '$_POST[fy]'),4326), $wms_proj))";
 	
 pg_query($query) or die( "Erreur requete" );
 

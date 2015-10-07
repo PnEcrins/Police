@@ -54,8 +54,8 @@
 		// Si l'outil carto est OpenLayers alors il faut d'abord reprojeter les corrd X et Y qui sont stockés en WGS84 dans la BdD 
 		// vers la projection des fonds carto fournis par le WMS.
 		if ($outil_carto == "ol") { 
-		$reproj = "SELECT st_x(Transform(SETSRID(MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS x_ol, 
-		st_y(Transform(SETSRID(MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS y_ol;";
+		$reproj = "SELECT ST_x(ST_Transform(ST_SetSrid(ST_MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS x_ol, 
+		ST_y(ST_Transform(ST_SetSrid(ST_MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS y_ol;";
 		$result = pg_query($reproj) or die ('Échec requête : ' . pg_last_error()) ;
 		$val = pg_fetch_array($result) ;
 

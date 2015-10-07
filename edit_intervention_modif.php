@@ -68,7 +68,7 @@ $query= "UPDATE interventions.t_interventions SET
 	secteur_id = '$_POST[fsect]', 
 	coord_x = '$_POST[fx]', 
 	coord_y = '$_POST[fy]', 
-	the_geom = Transform(SETSRID(MakePoint('$_POST[fx]', '$_POST[fy]'),4326), $wms_proj),
+	the_geom = ST_Transform(ST_SetSrid(ST_MakePoint('$_POST[fx]', '$_POST[fy]'),4326), $wms_proj),
 	statutzone_id = '$_POST[fstatut]', 
 	observation = '$observation',
 	nbcontrevenants = $nbcontrev,
@@ -200,8 +200,8 @@ $query = "SELECT *,
 		// Si l'outil carto est OpenLayers alors il faut d'abord reprojeter les coord X et Y qui sont stockés en WGS84 dans la BdD 
 		// vers la projection des fonds carto fournis par le WMS.
 		if ($outil_carto == "ol") { 
-		$reproj = "SELECT st_x(Transform(SETSRID(MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS xl2, 
-		st_y(Transform(SETSRID(MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS yl2;";
+		$reproj = "SELECT ST_x(ST_Transform(ST_SetSrid(ST_MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS xl2, 
+		ST_y(ST_Transform(ST_SetSrid(ST_MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS yl2;";
 		$result = pg_query($reproj) or die ('Échec requête : ' . pg_last_error()) ;
 		$val = pg_fetch_array($result) ;
 

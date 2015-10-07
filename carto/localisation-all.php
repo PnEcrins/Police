@@ -1,5 +1,5 @@
-<!-- Fichier inséré dans la page carto.php affichant les interventions par année. 
-Positionne un marqueur à l'emplacement de chaque intervention de l'année selectionnée (année en cours par défaut) -->
+<!-- Fichier insÃ©rÃ© dans la page carto.php affichant les interventions par annÃ©e. 
+Positionne un marqueur Ã  l'emplacement de chaque intervention de l'annÃ©e selectionnÃ©e (annÃ©e en cours par dÃ©faut) -->
 
 	<div id="map_1" style="margin: 0 auto; border: 1px solid rgb(69, 69, 85); padding: 10px; width: 750px; height: 650px; background-color: rgb(229, 227, 223); color: rgb(32, 183, 255); font-size: 16px; font-weight: bold; vertical-align: middle; position: relative;">
 	</div>
@@ -12,7 +12,7 @@ Positionne un marqueur à l'emplacement de chaque intervention de l'année selecti
 //////////////
 //////////////
 <? if ($outil_carto == "gm") { ?>
-/* fonction intialisatrice de la création de la carte */
+/* fonction intialisatrice de la crÃ©ation de la carte */
 function load() {
 	
 	var map1 = new GMap2(document.getElementById("map_1"));
@@ -27,11 +27,11 @@ function load() {
 	map1.setCenter(center, 10);
 	
 	<?
-	// Lister les interventions de l'année en question
+	// Lister les interventions de l'annÃ©e en question
 	$query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat  FROM interventions.t_interventions
     $where" ; 
 	//Executer la requete
-	$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
+	$result = pg_query($query) or die ('Ã‰chec requÃªte : ' . pg_last_error()) ;
 	$i = '1'
 	?>
 	
@@ -50,7 +50,7 @@ function load() {
 			WHERE id_intervention = '$idint'
 			ORDER BY infraction_id";
 			//Executer la requete
-			$resultinfr = pg_query($queryinfr) or die ('Échec requête : ' . pg_last_error()) ;
+			$resultinfr = pg_query($queryinfr) or die ('Ã‰chec requÃªte : ' . pg_last_error()) ;
 		?>		
 	var intervention<? echo $i; ?> = new GLatLng(<? echo $yy; ?>, <? echo $xx; ?>);
 	var marker<? echo $i; ?> = new GMarker(intervention<? echo $i; ?>, 
@@ -70,7 +70,7 @@ function load() {
 	var url= "http://cartotest.ecrins-parcnational.fr/police/carto/gm-kml/aoa-pne-wgs84.kml";
 	aoaXML = new google.maps.GeoXml(url);
 	map1.addOverlay(aoaXML);
-	// Afficher les réserves du PnE (fichier KML)
+	// Afficher les rÃ©serves du PnE (fichier KML)
 	var reservesXML;
 	var url= "http://cartotest.ecrins-parcnational.fr/police/carto/gm-kml/reserves-pne-wgs84.kml";
 	reservesXML = new google.maps.GeoXml(url);
@@ -86,19 +86,19 @@ function load() {
 	$debut='{"geometry":';
 	$fin=',"type": "Feature","properties": {}}';
 	$suffix=']}';
-	//selectionner toutes les intervantions avec leur géometries
-	$query = "SELECT *, st_asgeojson(st_transform(SETSRID(MakePoint(coord_x, coord_y),4326), '$wms_proj')) as geojson,to_char(date, 'dd/mm/yyyy') as dat  
+	//selectionner toutes les intervantions avec leur gÃ©ometries
+	$query = "SELECT *, ST_Asgeojson(ST_Transform(ST_SetSrid(ST_MakePoint(coord_x, coord_y),4326), '$wms_proj')) as geojson,to_char(date, 'dd/mm/yyyy') as dat  
 		FROM interventions.t_interventions int
 		LEFT JOIN interventions.bib_types_interventions typ ON typ.id_type_intervention = int.type_intervention_id 
         $where" ;
 		// WHERE extract(year from int.date)= '$cartoannee'" ; 
-		$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
+		$result = pg_query($query) or die ('Ã‰chec requÃªte : ' . pg_last_error()) ;
 	//bouble sur les interventions
 	 while ($val = pg_fetch_assoc($result)){
 		$compt++;
 		$date = $val['dat'];
 		$typeintervention = $val['type_intervention'];
-		if ($val['suivi_suite_donnee'] =="") { $suivi_suite = "Non renseign&eacute;"; } 
+		if ($val['suivi_suite_donnee'] =="") { $suivi_suite = "Non renseignÃ©"; } 
 		else { $suivi_suite = "Oui, voir d&eacute;tails"; }
 		$xx = $val['coord_x'];
 		$yy = $val['coord_y'];
@@ -110,7 +110,7 @@ function load() {
 		WHERE id_intervention = '$idint'
 		ORDER BY infraction_id";
 		//Executer la requete
-		$resultinfr = pg_query($queryinfr) or die ('Échec requête : ' . pg_last_error()) ;
+		$resultinfr = pg_query($queryinfr) or die ('Ã‰chec requÃªte : ' . pg_last_error()) ;
 		$nb = pg_numrows($result);
 		$c=0;$virg="";$infractions = "";
 		//boucle 2 sur laou les infractions de chaque intervention
@@ -157,7 +157,7 @@ function load() {
 			,{isBaseLayer: false}
 		);
 
-		//var coordControl = new OpenLayers.Control.MousePosition ({suffix: ' mètres', prefix:'Coordonnées x & y en Lambert2 étendu : '}, {displayProjection:'EPSG:4326' });
+		//var coordControl = new OpenLayers.Control.MousePosition ({suffix: ' mÃ¨tres', prefix:'CoordonnÃ©es x & y en Lambert2 Ã©tendu : '}, {displayProjection:'EPSG:4326' });
 		
 		this.carte = new OpenLayers.Map('map_1',options);
 		//carte.addControl(coordControl);
