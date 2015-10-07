@@ -64,9 +64,35 @@ Vos documents doivent être placés dans le répertoire ``documents`` il vous su
 
 
 Mise à jour de l'application
-----------------------------
+============================
 
-* Suivre les instructions disponibles dans la doc de la version choisie (https://github.com/PnEcrins/Police/releases)
+Les différentes versions sont disponibles sur le Github du projet (https://github.com/PnEcrins/Police/releases).
+
+* Télécharger et extraire la version souhaitée dans un répertoire séparé (où X.Y.Z est à remplacer par le numéro de la version que vous installez). 
+
+.. code-block:: bash
+
+    wget https://github.com/PnEcrins/Police/archive/vX.Y.Z.zip
+    unzip vX.Y.Z.zip
+    cd Police-X.Y.Z/
+
+* Lire attentivement les notes de chaque version si il y a des spécificités (https://github.com/PnEcrins/Police/releases). Suivre ces instructions avant de continuer la mise à jour.
+
+* Copier les anciens fichiers de configuration et les charger dans le nouveau répertoire de l'application (`version-precedente` est à modifier par le nom du répertoire où était installé votre application Police).
+
+::
+
+    # Fichiers de configuration
+    cp ../version-precedente/conf/parametres.php conf/parametres.php
+    cp ../version-precedente/conf/connecter.php conf/connecter.php
+    cp ../version-precedente/conf/settings.ini conf/settings.ini
+    cp ../version-precedente/conf/parametres_wms.js conf/parametres_wms.js
+
+    # Logo et pied de page
+    cp ../version-precedente/images/logo_etablissement.png images/logo_etablissement.png
+    cp ../version-precedente/images/footer.jpg images/footer.jpg
+
+* Renommer l'ancien répertoire de l'application Police (/Police_OLD/ par exemple) puis celui de la nouvelle version (/Police/ par exemple) pour que le serveur pointe sur la nouvelle version
 
 
 Clé IGN
