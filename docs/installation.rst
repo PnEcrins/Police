@@ -68,7 +68,7 @@ Mise à jour de l'application
 
 Les différentes versions sont disponibles sur le Github du projet (https://github.com/PnEcrins/Police/releases).
 
-* Télécharger et extraire la version souhaitée dans un répertoire séparé (où X.Y.Z est à remplacer par le numéro de la version que vous installez). 
+* Télécharger et extraire la version souhaitée dans un répertoire séparé (où ``X.Y.Z`` est à remplacer par le numéro de la version que vous installez). 
 
 .. code-block:: bash
 
@@ -78,7 +78,7 @@ Les différentes versions sont disponibles sur le Github du projet (https://gith
 
 * Lire attentivement les notes de chaque version si il y a des spécificités (https://github.com/PnEcrins/Police/releases). Suivre ces instructions avant de continuer la mise à jour.
 
-* Copier les anciens fichiers de configuration et les charger dans le nouveau répertoire de l'application (`version-precedente` est à modifier par le nom du répertoire où était installé votre application Police).
+* Copier les anciens fichiers de configuration et les charger dans le nouveau répertoire de l'application (``version-precedente`` est à modifier par le nom du répertoire où était installé votre application Police).
 
 ::
 
