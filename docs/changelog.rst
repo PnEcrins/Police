@@ -2,6 +2,27 @@
 CHANGELOG
 =========
 
+2.3.0.dev0
+------------------
+
+**Note de version**
+
+Avant mise à jour : 
+* Les fonds carto ne sont plus affichés à partir d'un flux WMS mais à partir de l'API Geoportail IGN. Il vous faut donc une clé API Geoportail IGN correspondant à l'URL de votre serveur (https://github.com/PnEcrins/Police/blob/master/docs/installation.rst#clé-ign).
+
+Après mise à jour :
+* Un fichier ``conf/conf_carto.js`` a été ajouté à l'application. Générez le votre à partir du fichier ``conf/conf_carto.js.sample`` et renseignez-y les paramètres de votre clé IGN ainsi que l'emprise de votre territoire (déjà renseigné dans le fichier ``conf/parametres.php``
+* Les fonds provenant de l'API Google Maps ne fonctionnaient plus dans les versions précédentes car l'API n'avait pas été mise à jour dans Police. Les lignes de code qui faisaient référence à cette API Google Maps ont été supprimées pour nettoyer le code. 
+* Les paramètres correspondant à l'usage de l'API Google Maps ont été supprimés du fichier ``conf/parametres.php``. Après avoir récupéré ce fichier de votre version 2.2.0, vous pouvez y retirer la partie correspondant à Google Maps (voir ``conf/parametre.php.sample`` dans https://github.com/PnEcrins/Police/commit/748b8ae079446f3959af54ea13e32dbc5f55e0b3)
+
+**Changements**
+
+* Compléments dans la documentation d'installation (https://github.com/PnEcrins/Police/blob/master/docs/installation.rst)
+
+**Correction de bugs**
+
+* 
+
 
 2.2.0 (2015-10-06)
 ------------------
