@@ -2,6 +2,7 @@
 <? include "header_front.php" ?>
 	<title>Police du <? echo $etablissement_abv; ?> - Fiche intervention</title>
 		<script type="text/javascript" src="js/application.ol.js"></script>
+        <script type="text/javascript" src="conf/conf_carto.js"></script>
 		<script type="text/javascript" src="http://dev.openlayers.org/releases/OpenLayers-2.11/OpenLayers.js"></script>
         <script type="text/javascript" src="http://api.ign.fr/geoportail/api/js/2.0.0/GeoportalMin.js"></script>
 </head>
@@ -46,17 +47,14 @@
 		$amende = $val['suivi_montant_amende'];
 		$amendedommages = $val['suivi_montant_dommages'];
 		
-		// Si l'outil carto est OpenLayers alors il faut d'abord reprojeter les corrd X et Y qui sont stockés en WGS84 dans la BdD 
-		// vers la projection des fonds carto fournis par le WMS.
-		if ($outil_carto == "ol") { 
-		$reproj = "SELECT ST_x(ST_Transform(ST_SetSrid(ST_MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS x_ol, 
-		ST_y(ST_Transform(ST_SetSrid(ST_MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS y_ol;";
-		$result = pg_query($reproj) or die ('Échec requête : ' . pg_last_error()) ;
-		$val = pg_fetch_array($result) ;
+    // il faut d'abord reprojeter les corrd X et Y qui sont stockés en WGS84 dans la BdD vers la projection des fonds carto fournis par le WMS. 
+    $reproj = "SELECT ST_x(ST_Transform(ST_SetSrid(ST_MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS x_ol, 
+    ST_y(ST_Transform(ST_SetSrid(ST_MakePoint(".$x.", ".$y."),4326), ".$wms_proj.")) AS y_ol;";
+    $result = pg_query($reproj) or die ('Échec requête : ' . pg_last_error()) ;
+    $val = pg_fetch_array($result) ;
 
-		$x_ol = $val['x_ol'];
-		$y_ol = $val['y_ol'];
-		}
+    $x_ol = $val['x_ol'];
+    $y_ol = $val['y_ol'];
 ?>
 
 

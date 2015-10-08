@@ -9,6 +9,7 @@ sudo chmod -R 777 log
 echo "Créer les fichiers de configurations en lien avec la base de données..."
 cp conf/connecter.php.sample conf/connecter.php
 cp conf/parametres.php.sample conf/parametres.php
+cp conf/conf_carto.js.sample conf/conf_carto.js
 cp documents_liste.php.sample documents_liste.php
 
 echo "configuration du fichier conf/connecter.php..."

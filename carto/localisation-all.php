@@ -54,8 +54,6 @@ Positionne un marqueur à l'emplacement de chaque intervention de l'année selec
 	$features = $prefix.$geojson.$suffix;
 ?>
 var carte;
-var ign_api_key = 'd0rd9bmgd4pk3ywnwvfnk3g6'; //clef site http://professionnels.ign.fr
-var centre_map = new OpenLayers.LonLat(700000, 5594000)
 if (window.__Geoportal$timer===undefined) {
     var __Geoportal$timer= null;
 }
@@ -104,10 +102,7 @@ init=function(){
     });
 }
 var createMap = function() {
-    var ign_resolutions=[156543.03392804103,78271.5169640205,39135.75848201024,19567.879241005125,9783.939620502562,4891.969810251281,2445.9849051256406,1222.9924525628203,611.4962262814101,305.74811314070485,152.87405657035254,76.43702828517625,38.218514142588134,19.109257071294063,9.554628535647034,4.777314267823517,2.3886571339117584,1.1943285669558792,0.5971642834779396,0.29858214173896974,0.14929107086948493,0.07464553543474241];
-    //-------extent pne ---------------
-    var extent_max = new OpenLayers.Bounds(600000, 5500000,760000, 5720000);
-    var resolution_max = 305.74811309814453;
+    var extent_max = new OpenLayers.Bounds(min_x, min_y,max_x, max_y);
     var i;
     var wm= new OpenLayers.Projection("EPSG:3857");
     
@@ -171,7 +166,7 @@ var createMap = function() {
         carte.addLayer(l0);
     };
     createBaseLayer();
-    carte.setCenter(centre_map, 9);
+    carte.setCenter(new OpenLayers.LonLat(center_x, center_y), 9);
     
     return carte;
 }	
@@ -199,7 +194,7 @@ var createMap = function() {
 	var featurecollection = <?=$features;?>;
 	var geojson_format = new OpenLayers.Format.GeoJSON();
 	this.interventions.addFeatures(geojson_format.read(featurecollection));
-	carte.setCenter(centre_map, 9);
+	carte.setCenter(new OpenLayers.LonLat(center_x, center_y), 9);
 
 	//---------------------------------------------gestion des popup's----------------------------------------------------
 	// Instanciation du control selectFeature

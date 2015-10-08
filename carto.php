@@ -11,19 +11,12 @@
 		      $('a[rel*=facebox]').facebox() 
 		    })
 		</script>
+        <script type="text/javascript" src="conf/conf_carto.js"></script>
         <script type="text/javascript" src="http://dev.openlayers.org/releases/OpenLayers-2.11/OpenLayers.js"></script>
         <script type="text/javascript" src="http://api.ign.fr/geoportail/api/js/2.0.0/GeoportalMin.js"></script>
 	<title>Police du <? echo $etablissement_abv; ?> - Localisation des interventions</title>
 </head>
-
-<? if ($outil_carto == "gm") { ?>
-<!-- Si l'outil carto utilisé est OpenLayers alors charger ses fonctions javascripts à l'ouverture de la page -->
-<body onload="load()" onunload="GUnload()">
-<? } else { ?>
-<!-- Sinon on charge celles de GoogleMaps -->
 <body>
-<? } ?>
-
 <? include "menu_general.php" ?>
 
            	<div id="news">
@@ -67,17 +60,9 @@
 				<img src="images/icones/rechercher.gif" alt="Rechercher une ou des intervention(s)" title="Rechercher une intervention" border="0" align="absmiddle"> Rechercher une ou des intervention(s)
 			</a>
 				
-				<? include "carto/localisation-all.php" ; ?>
+			<? include "carto/localisation-all.php" ; ?>
 				
-				<? if ($outil_carto == "gm") { ?>
-					<p>
-						Survolez chaque marqueur pour obtenir des informations sur l'intervention.
-					</p>
-				<? } else { ?>
-					<p>
-						Cliquez sur les interventions pour obtenir plus d'informations.
-					</p>
-				<? } ?>
+			<p>Cliquez sur les interventions pour obtenir plus d'informations.</p>
 
 		<!-- Fermer le div contenu -->
 		</div>

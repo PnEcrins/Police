@@ -43,31 +43,17 @@ $limite = 30;
 ///////////////////////////////////////////CARTO////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Choix de l'outil d'affichage carto (GoogleMaps ou OpenLayers). Valeurs possibles : gm OU ol
-// ATTENTION, l'application ne fonctionne plus avec GoogleMaps
-$outil_carto = "ol";
-
-///////////////////////////////////////////Si vous utilisez GoogleMaps///////////////////////////////////////////
-
-//Clé pour GoogleMaps (obtenu ici http://code.google.com/intl/fr/apis/maps/signup.html en indiquant le domaine hébergeant l'application)
-$googlekeymap = "ma_cle_gmap";
-//Coordonnées du centre du territoire en WGS84
-$gm_x_center = "6.31";
-$gm_y_center = "44.85";
-
-///////////////////////////////////////////Si vous utilisez OpenLayers///////////////////////////////////////////
-
 //URL du serveur WMS
 $wms_url = "http://mondomaine.fr/wms?";
 //Projection utilisée au format EPSG (3857 pour l'API geoportail, 27572 pour du lambert 2 étendu, 2154 pour du lambert 93, 4326 pour du WGS84, ...)
 $wms_proj = 3857;
 //Coordonnées du centre du territoire dans la projection définie précédemment
-$ol_x_center = 914901;
-$ol_y_center = 1986895;
+$ol_x_center = 700000;
+$ol_y_center = 5594000;
 //Etendu du territoire dans la projection définie précédemment
-$min_x = 870000 ;
-$max_x = 950000 ;
-$min_y = 1940000 ;
-$max_y = 2040000 ;
+$min_x = 600000 ;
+$max_x = 760000 ;
+$min_y = 5500000 ;
+$max_y = 5720000 ;
 
 ?>

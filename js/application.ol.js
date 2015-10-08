@@ -3,7 +3,6 @@ function roundDecimal(nombre, precision){
     var tmp = Math.pow(10, precision);
     return Math.round( nombre*tmp )/tmp;
 }
-var ign_api_key = 'd0rd9bmgd4pk3ywnwvfnk3g6'; //clef site http://professionnels.ign.fr
 
 if (window.__Geoportal$timer===undefined) {
     var __Geoportal$timer= null;
@@ -54,13 +53,9 @@ initMap=function(){
 }
 var carte;
 var createMap = function() {
-    var ign_resolutions=[156543.03392804103,78271.5169640205,39135.75848201024,19567.879241005125,9783.939620502562,4891.969810251281,2445.9849051256406,1222.9924525628203,611.4962262814101,305.74811314070485,152.87405657035254,76.43702828517625,38.218514142588134,19.109257071294063,9.554628535647034,4.777314267823517,2.3886571339117584,1.1943285669558792,0.5971642834779396,0.29858214173896974,0.14929107086948493,0.07464553543474241];
-    //-------extent pne ---------------
-    var extent_max = new OpenLayers.Bounds(600000, 5500000,760000, 5720000);
-    var resolution_max = 305.74811309814453;
-    var i;
+    var extent_max = new OpenLayers.Bounds(min_x, min_y,max_x, max_y);
     var wm= new OpenLayers.Projection("EPSG:3857");
-    
+    var i;
     carte = new OpenLayers.Map('map_1' 
         ,{
             projection: wm
@@ -86,7 +81,6 @@ var createMap = function() {
             ]
         }
     );
-    maMap = carte;//debug
 
     var createBaseLayer = function() {
         var i;
@@ -123,7 +117,7 @@ var createMap = function() {
         carte.addLayer(l0);
     };
     createBaseLayer();
-    carte.setCenter(new OpenLayers.LonLat(700000, 5594000), 15);
+    carte.setCenter(new OpenLayers.LonLat(center_x, center_y), 15);
     
     return carte;
 }
@@ -157,7 +151,7 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
  
 	function updatePage(val1,val5,val2,val3,val4){
 		//communes
-        if(document.getElementById('fcomm1')}
+        if(document.getElementById('fcomm1')){
             var l = document.getElementById('fcomm1').length;
             for (i=0; i<l; i++)
             {
@@ -168,7 +162,7 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
             }
         }
         //secteurs
-        if(document.getElementById('fsect1')}
+        if(document.getElementById('fsect1')){
             var s = document.getElementById('fsect1').length;
             for (i=0; i<s; i++)
             {
@@ -179,7 +173,7 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
             }
         }
         //statut de la zone
-        if(document.getElementById('fstatut1')}
+        if(document.getElementById('fstatut1')){
             var l = document.getElementById('fstatut1').length;
             for (i=0; i<l; i++)
             {

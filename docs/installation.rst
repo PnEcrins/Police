@@ -66,7 +66,9 @@ Configuration de l'application
         
 * Editer et vérifier dans le fichier ``conf/connecter.php`` que vos paramètres de connexion à la BDD sont corrects.
         
-* Editer et mettre à jour le fichier ``conf/parametres.php`` avec vos paramètres. Vous devez notamment fournir l'URL du serveur WMS afin d'afficher les fond de cartes. Vous devez aussi configurer les valeurs des emprises de votre territoire.
+* Editer et mettre à jour le fichier ``conf/parametres.php`` avec vos paramètres. 
+
+* Editer et mettre à jour le fichier ``conf/conf_carto.js`` avec vos paramètres. Vous devez notamment fournir la clé de l'API IGN (voir dernière section de ce document). Vous devez aussi configurer les valeurs des emprises de votre territoire.
         
 * Si vous souhaitez mettre à disposition des utilisateurs des documents (PDF, DOC, XLS...), éditer et mettre à jour le fichier ``documents_liste.php``.
 
@@ -137,4 +139,4 @@ Une fois connecté au site:
 * Finir votre commande en selectionnant les couches d'intéret et en acceptant les différentes conditions.
 
 
-Une fois que votre commande est prête, saisissez la valeur de la clé IGN reçue dans le fichier ``conf/parametres.php``.
+Une fois votre commande terminée, saisissez la valeur de la clé IGN reçue dans le fichier ``conf/conf_carto.js``.
