@@ -30,7 +30,7 @@ Il est possible de faire l'installation de l'application sur un serveur existant
         cd /tmp
         wget https://github.com/PnEcrins/Police/archive/master.zip
         unzip master.zip
-        cp -R Police-master /home/police/police
+        cp -R Police-master /home/police/Police
         cd /home/police
 
 
@@ -125,4 +125,4 @@ L'utilisateur ``policeadmin`` est super utilisateur de PostgreSQL.
 
 L'application fonctionne avec par default le mot de passe ``monpassachanger`` mais il est conseillé de le modifier !
 
-Ces mots de passe, ainsi que les utilisateurs postgres créés ci-dessous ``policeuser`` et ``policeadmin`` sont des valeurs par défaut utilisées à plusieurs reprises dans l'application. Ils peuvent cependant être changés dans : conf/settings.ini
+Ces mots de passe, ainsi que les utilisateurs postgres créés ci-dessous ``policeuser`` et ``policeadmin`` sont des valeurs par défaut utilisées à plusieurs reprises dans l'application. Ils peuvent cependant être changés dans le fichier ``conf/settings.ini``

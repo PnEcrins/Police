@@ -25,11 +25,11 @@ ATTENTION : Les valeurs renseignées dans ce fichier sont utilisées par le scri
 Création de la base de données
 ==============================
 
-* Création de la base de données et chargement des données initiales
+* Création automatisée de la base de données (``data/policedb.sql``) et chargement des données initiales (``data/policedb_data.sql`` et (``policedb_data_sig_pne.sql``) :
 
     ::
     
-        cd /home/police/police
+        cd /home/police/Police
         sudo ./install_db.sh
         
 * Vous pouvez consulter le fichier ``log/install_db.log`` afin de vérifier si des errreurs se sont produites lors de l'installation de la base de données
@@ -39,28 +39,40 @@ Création de la base de données
     ::
 
         export PGPASSWORD=monpassachanger;psql -h policedbhost -U policeuser -d policedb -f data/pne/policedb_data_sig_pne.sql 
-        
+
+La base de données est composée de 4 schémas : 
+* Public contenant les fonctions natives PostgreSQL et PostGIS ainsi que la table geometry_columns listant les tables géoréférencées ainsi que leur systeme de projection respectives
+* Interventions contenant l’ensemble des interventions et de leurs attributs 
+* Layers contenant toutes les tables géographiques (communes, zones réglementées, cœur du Parc, ...)
+* Utilisateurs contenant la liste des utilisateurs ainsi que leurs droits (ce schéma ne doit pas être modifié, il est mise à jour par l'application UsersHub et la répercusion automatique de toutes les modifications faites dans la BDD de UsersHub.
+
+Les couches géographiques à intégrer :
+* Communes dans la table ``layers.l_communes``
+* Secteurs dans la table ``layers.l_secteurs``
+* Zones à statut (cœur, aire d’adhésion, réserves) dans la table ``layers.l_statut_zone``. En lien avec la bibliothèque des types de zones ``interventions.bib_statutszone``. Le champ ``ordre`` de la table ``layers.l_statut_zone`` permet d’ordonner l’importance des zones pour savoir laquelle sera retenue en cas de superposition de plusieurs zones.
+
+Les autres bibliothèques peuvent aussi être modifiées directement dans la base de données (liste des types d’infractions, des types de zones à statut, ...). Ces tables utilisent le préfixe bib_    
 
 Configuration de l'application
 ==============================
 * Se loguer sur le serveur avec l'utilisateur ``police``
 
-* Se placer dans le répertoire de l'application et lancer le script d'installation de l'application ``install_app.sh`` :
+* Se placer dans le répertoire de l'application et lancer le script d'installation de l'application ``install_app.sh`` qui va générer les fichiers de configuration et modifier les droits de certains répertoires :
 
     :: 
 	
-	    cd /home/police/police
+	    cd /home/police/Police
         ./install_app.sh
         
 * Editer et vérifier dans le fichier ``conf/connecter.php`` que vos paramètres de connexion à la BDD sont corrects.
         
-* Editer et mettre à jour le fichier ``conf/parametres.php`` avec vos paramètres. Vous devez notamment fournir l'url du serveur wms afin d'afficher les fond de cartes. Vous devez aussi configurer les valeurs des emprises de votre territoire.
+* Editer et mettre à jour le fichier ``conf/parametres.php`` avec vos paramètres. Vous devez notamment fournir l'URL du serveur WMS afin d'afficher les fond de cartes. Vous devez aussi configurer les valeurs des emprises de votre territoire.
         
-* Si vous souhaitez mettre à disposition des utilisateurs des documents, éditer et mettre à jour le fichier ``documents_liste.php``.
+* Si vous souhaitez mettre à disposition des utilisateurs des documents (PDF, DOC, XLS...), éditer et mettre à jour le fichier ``documents_liste.php``.
 
-Vos documents doivent être placés dans le répertoire ``documents`` il vous suffit ensuite de modifier le fichier ``documents_liste.php`` pour faire pointer les liens vers vos documents.
+Vos documents doivent être placés dans le répertoire ``documents``, il vous suffit ensuite de modifier le fichier ``documents_liste.php`` pour faire pointer les liens vers vos documents.
 
-* Pour tester, se connecter à l'application via http://mon-domaine.fr/police avec l'utilisateur et mot de passe : ``admin/admin``
+* Pour tester, se connecter à l'application via http://mon-domaine.fr/Police avec l'utilisateur et mot de passe : ``admin/ admin``
 
 
 Mise à jour de l'application
@@ -91,6 +103,9 @@ Les différentes versions sont disponibles sur le Github du projet (https://gith
     # Logo et pied de page
     cp ../version-precedente/images/logo_etablissement.png images/logo_etablissement.png
     cp ../version-precedente/images/footer.jpg images/footer.jpg
+    
+    # Documents (si vous en avez ajouté)
+    cp -r ../version-precedente/documents/* /documents/
 
 * Renommer l'ancien répertoire de l'application Police (/Police_OLD/ par exemple) puis celui de la nouvelle version (/Police/ par exemple) pour que le serveur pointe sur la nouvelle version
 
