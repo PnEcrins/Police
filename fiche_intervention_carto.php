@@ -1,14 +1,9 @@
 <? include "verification.php" ?>
 <? include "header_front.php" ?>
 	<title>Police du <? echo $etablissement_abv; ?> - Fiche intervention</title>
-	<? if ($outil_carto == "gm") { ?>
-		<script type="text/javascript" src="js/application.gm.js"></script>
-		<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<? echo $googlekeymap; ?>"></script>
-	<? } elseif ($outil_carto == "ol") { ?>
 		<script type="text/javascript" src="js/application.ol.js"></script>
-		<script type="text/javascript" src="js/openlayers/OpenLayers.js"></script>
-		<script type="text/javascript" src="conf/parametres_wms.js"></script>
-	<? } ?>
+		<script type="text/javascript" src="http://dev.openlayers.org/releases/OpenLayers-2.11/OpenLayers.js"></script>
+        <script type="text/javascript" src="http://api.ign.fr/geoportail/api/js/2.0.0/GeoportalMin.js"></script>
 </head>
 
 <?php
@@ -64,14 +59,8 @@
 		}
 ?>
 
-<? if ($outil_carto == "gm") { ?>
-<!-- Si l'outil carto utilisé est Google Maps alors charger ses fonctions javascripts à l'ouverture de la page -->
-	<body onload="create_gm(<?=$y;?>,<?=$x;?>,13,'<?=$host_url;?>','<?=$racine;?>',true)" onunload="GUnload()">
-<? } elseif ($outil_carto == "ol") { ?>
-<!-- Sinon on charge celles de OpenLayers -->
-	<body onload="create_ol.init(<?=$x_ol;?>,<?=$y_ol;?>,'6','<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',true)">
-<? } ?>
 
+<body onload="create_ol.init(<?=$x_ol;?>,<?=$y_ol;?>,'15','<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',true)">
 <div style="margin: 0 auto; padding: 10px; width: 800px;">
 	<p>
 		<img src="images/logo_etablissement.png" align="absmiddle"> 

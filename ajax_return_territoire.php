@@ -15,7 +15,7 @@ $ywgs84 = $val['ywgs84'];
 
 //intersection avec la couche COMMUNE
 $query="SELECT id_commune FROM layers.l_communes
-WHERE ST_Intersects(the_geom,ST_PointFromText('POINT(".$x." ".$y.")',".$wms_proj."));";
+WHERE ST_Intersects(st_transform(the_geom,".$wms_proj."),ST_PointFromText('POINT(".$x." ".$y.")',".$wms_proj."));";
 $result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 $val = pg_fetch_assoc($result);
 $id_commune = $val['id_commune'];
@@ -24,7 +24,7 @@ if ($verif != "1"){$id_commune=999;}
 
 //intersection avec la couche SECTEUR
 $query="SELECT id_sect FROM layers.l_secteurs
-WHERE ST_Intersects(the_geom,ST_PointFromText('POINT(".$x." ".$y.")',".$wms_proj."));";
+WHERE ST_Intersects(st_transform(the_geom,".$wms_proj."),ST_PointFromText('POINT(".$x." ".$y.")',".$wms_proj."));";
 $result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 $val = pg_fetch_assoc($result);
 $id_sect = $val['id_sect'];
@@ -33,7 +33,7 @@ if ($verif != "1"){$id_sect=99;}
 
 //intersection avec la couche de STATUT DE LA ZONE
 $query="SELECT ordre, id_statut_zone FROM layers.l_statut_zone
-WHERE ST_Intersects(the_geom,ST_PointFromText('POINT(".$x." ".$y.")',".$wms_proj.")) 
+WHERE ST_Intersects(st_transform(the_geom,".$wms_proj."),ST_PointFromText('POINT(".$x." ".$y.")',".$wms_proj.")) 
 ORDER BY ordre desc limit 1;";
 $result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 $val = pg_fetch_assoc($result);

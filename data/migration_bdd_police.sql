@@ -1,4 +1,4 @@
---migration de la base police v2.1 vers la base en V2.2
+------------------migration de la base police v2.1 vers la base en V2.2-------------------------
 -- Analyse
 -- Schéma layers identique sauf un gid dans la base en V2.1 mais à priori inutilisé.
 -- Schéma layers public
@@ -50,3 +50,16 @@ ALTER TABLE interventions.vue_agents OWNER TO cartopne;
 -- DROP TABLE interventions.bib_agents;
 -- DROP TABLE interventions.bib_droits;
 -- DROP TABLE interventions.svg_bib_agents;
+
+------------------migration de la base police v2.2 vers la base en V2.3-------------------------
+-- Passage à l'api IGN Geoportail
+
+-- Postgis 1.x
+SELECT AddGeometryColumn ('interventions','t_interventions','the_geom_3857','3857','POINT',2);
+--récupération des anciennes données
+UPDATE interventions.t_interventions SET the_geom_3857 = ST_Transform(the_geom,3857);
+--Suppression de la colonne
+ALTER TABLE interventions.t_interventions DROP COLUMN the_geom;
+
+-- Postgis 2.x
+-- ALTER TABLE interventions.t_interventions ADD COLUMN the_geom_3857 geometry(Point,3857);

@@ -248,7 +248,6 @@ CREATE TABLE t_interventions (
     type_intervention_id integer,
     coord_x numeric(10,8),
     coord_y numeric(10,8),
-    the_geom public.geometry,
     suivi_date_limite date,
     suivi_num_parquet character varying(20),
     suivi_suite_donnee text,
@@ -261,8 +260,10 @@ CREATE TABLE t_interventions (
     secteur_id integer,
     suivi_appel_avocat boolean,
     suivi_date_audience date,
-    CONSTRAINT enforce_dims_the_geom CHECK ((public.st_ndims(the_geom) = 2)),
-    CONSTRAINT enforce_srid_the_geom CHECK ((public.st_srid(the_geom) = 27572))
+    the_geom_3857 public.geometry,
+    CONSTRAINT enforce_dims_the_geom_3857 CHECK ((public.st_ndims(the_geom_3857) = 2)),
+    CONSTRAINT enforce_srid_the_geom_3857 CHECK ((public.st_srid(the_geom_3857) = 3857)),
+    CONSTRAINT enforce_geotype_the_geom_3857 CHECK (st_geometrytype(the_geom_3857) = 'Point'::text OR the_geom_3857 IS NULL)
 );
 
 

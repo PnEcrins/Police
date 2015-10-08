@@ -6,82 +6,8 @@ Positionne un marqueur à l'emplacement de chaque intervention de l'année selec
 	
 <script type="text/javascript">
 //<![CDATA[
-//////////////
-//////////////
-//GOOGLEMAPS//
-//////////////
-//////////////
-<? if ($outil_carto == "gm") { ?>
-/* fonction intialisatrice de la création de la carte */
-function load() {
-	
-	var map1 = new GMap2(document.getElementById("map_1"));
+<?
 
-				   map1.setUIToDefault();
-				   map1.addControl(new GMapTypeControl());
-				   map1.addMapType(G_PHYSICAL_MAP);
-				   map1.setMapType(G_PHYSICAL_MAP) ;
-				   map1.enableScrollWheelZoom();
-
-	var center = new GLatLng(44.81107025326003, 6.317138671875);
-	map1.setCenter(center, 10);
-	
-	<?
-	// Lister les interventions de l'année en question
-	$query = "SELECT *, to_char(date, 'dd/mm/yyyy') as dat  FROM interventions.t_interventions
-    $where" ; 
-	//Executer la requete
-	$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
-	$i = '1'
-	?>
-	
-	// Creer un marqueur par intervention
-	<? while ($val = pg_fetch_assoc($result)) 
-		{
-		$date = $val['dat'];
-		$id = $val['id_intervention'];
-		$xx = $val['coord_x'];
-		$yy = $val['coord_y'];
-		$idint = $val['id_intervention'];
-			// Declarer la requete permettant d'afficher la ou les infractions des interventions cartographiees en plus de la date
-			$queryinfr = "SELECT id_intervention, infraction, infraction_id FROM interventions.t_interventions
-			LEFT JOIN interventions.cor_interventions_infractions ON intervention_id = id_intervention
-			LEFT JOIN interventions.bib_infractions ON id_infraction = infraction_id
-			WHERE id_intervention = '$idint'
-			ORDER BY infraction_id";
-			//Executer la requete
-			$resultinfr = pg_query($queryinfr) or die ('Échec requête : ' . pg_last_error()) ;
-		?>		
-	var intervention<? echo $i; ?> = new GLatLng(<? echo $yy; ?>, <? echo $xx; ?>);
-	var marker<? echo $i; ?> = new GMarker(intervention<? echo $i; ?>, 
-		{title:"Intervention no <? echo $id; ?> du <? echo $date; ?> - <? while ($val = pg_fetch_assoc($resultinfr)) {$type = $val['infraction'];?><?echo $type;?> - <? } ?>"});
-	
-	map1.addOverlay(marker<? echo $i; ?>);
-	// Incrementer la variable $i pour nommer chaque marqueur (marker1, marker 2, ...) correspondant chacun a une intervention.
-	<? $i++ ?>
-	<? } ?>
-	// Afficher le coeur du PnE (fichier KML)
-	var coeurXML;
-	var url= "<?echo $host_url.'/'.$racine;?>/carto/gm-kml/coeur-pne-wgs84.kml";
-	coeurXML = new google.maps.GeoXml(url);
-	map1.addOverlay(coeurXML);
-	// Afficher l'AOA du PnE (fichier KML)
-	var aoaXML;
-	var url= "<?echo $host_url.'/'.$racine;?>/carto/gm-kml/aoa-pne-wgs84.kml";
-	aoaXML = new google.maps.GeoXml(url);
-	map1.addOverlay(aoaXML);
-	// Afficher les réserves du PnE (fichier KML)
-	var reservesXML;
-	var url= "<?echo $host_url.'/'.$racine;?>/carto/gm-kml/reserves-pne-wgs84.kml";
-	reservesXML = new google.maps.GeoXml(url);
-	map1.addOverlay(reservesXML);
-}
-//////////////
-//////////////
-//OPENLAYERS//
-//////////////
-//////////////
-<? } elseif ($outil_carto == "ol") {
 	$prefix = '{"type": "FeatureCollection","features":['; 
 	$debut='{"geometry":';
 	$fin=',"type": "Feature","properties": {}}';
@@ -94,12 +20,12 @@ function load() {
 		// WHERE extract(year from int.date)= '$cartoannee'" ; 
 		$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 	//bouble sur les interventions
-	 while ($val = pg_fetch_assoc($result)){
+	while ($val = pg_fetch_assoc($result)){
 		$compt++;
 		$date = $val['dat'];
 		$typeintervention = $val['type_intervention'];
 		if ($val['suivi_suite_donnee'] =="") { $suivi_suite = "Non renseigné"; } 
-		else { $suivi_suite = "Oui, voir d&eacute;tails"; }
+		else { $suivi_suite = "Oui, voir détails"; }
 		$xx = $val['coord_x'];
 		$yy = $val['coord_y'];
 		$idint = $val['id_intervention'];
@@ -126,69 +52,154 @@ function load() {
 		$geojson = $geojson.$virgule.$str;
 	}
 	$features = $prefix.$geojson.$suffix;
-	?>
-	var createMap = function(wmsUrl,wmsProj,minX,minY,maxX,maxY) {
-		//Variable pour les options de la map
-		//Avec la taille (maxExtent), la projection
-		var options = {
-			maxResolution: "auto",
-			numZoomLevels:16,
-			projection: new OpenLayers.Projection("epsg:"+wmsProj),
-			displayProjection:new OpenLayers.Projection("epsg:"+wmsProj),
-			maxExtent: new OpenLayers.Bounds(minX,minY,maxX,maxY),
-			units: 'm'
-		};		
-		this.fonds = new OpenLayers.Layer.WMS(
-			"fonds"
-			,wmsUrl
-			,{layers: wms_fonds}
-			,{isBaseLayer: true}
-		);
-		this.coeur = new OpenLayers.Layer.WMS(
-			"coeur"
-			,wmsUrl
-			,{layers: wms_coeur,transparent: 'true'}
-			,{isBaseLayer: false}
-		);
-		this.reserves = new OpenLayers.Layer.WMS(
-			"reserves"
-			,wmsUrl
-			,{layers: wms_reserves,transparent: 'true'}
-			,{isBaseLayer: false}
-		);
+?>
+var carte;
+var ign_api_key = 'd0rd9bmgd4pk3ywnwvfnk3g6'; //clef site http://professionnels.ign.fr
+var centre_map = new OpenLayers.LonLat(700000, 5594000)
+if (window.__Geoportal$timer===undefined) {
+    var __Geoportal$timer= null;
+}
+/**
+ * Function: checkApiLoading
+ * Assess that needed classes have been loaded.
+ *
+ * Parameters:
+ * retryClbk - {Function} function to call if any of the expected classes
+ * is missing.
+ * clss - {Array({String})} list of classes to check.
+ *
+ * Returns:
+ * {Boolean} true when all needed classes have been loaded, false otherwise.
+ */
+function checkApiLoading(retryClbk,clss) {
+    var i;
+    if (__Geoportal$timer!=null) {
+        //clearTimeout: annule le minuteur "__Geoportal$timer" avant sa fin
+        window.clearTimeout(__Geoportal$timer);
+         __Geoportal$timer= null;
+    }
+    /**
+    * Il se peut que l'init soit exécuté avant que l'API ne soit chargée
+    * Ajout d'un code temporisateur qui attend 300 ms avant de relancer l'init
+    */
+    var f;
+    for (i=0, l= clss.length; i<l; i++) {
+        try {f= eval(clss[i]);} 
+        catch (e) {f= undefined;}
+        if (typeof(f)==='undefined') {
+             __Geoportal$timer= window.setTimeout(retryClbk, 300);
+            return false;
+        }
+    }
+    return true;
+}
+init=function(){
+    // on attend que les classes soient chargées
+    if (checkApiLoading('init();',['OpenLayers','Geoportal','Geoportal.Catalogue'])===false) {
+        return;
+    }
+    // on charge la configuration de la clef API, puis on charge l'application
+    Geoportal.GeoRMHandler.getConfig([ign_api_key], null,null, {
+        onContractsComplete: createMap()
+    });
+}
+var createMap = function() {
+    var ign_resolutions=[156543.03392804103,78271.5169640205,39135.75848201024,19567.879241005125,9783.939620502562,4891.969810251281,2445.9849051256406,1222.9924525628203,611.4962262814101,305.74811314070485,152.87405657035254,76.43702828517625,38.218514142588134,19.109257071294063,9.554628535647034,4.777314267823517,2.3886571339117584,1.1943285669558792,0.5971642834779396,0.29858214173896974,0.14929107086948493,0.07464553543474241];
+    //-------extent pne ---------------
+    var extent_max = new OpenLayers.Bounds(600000, 5500000,760000, 5720000);
+    var resolution_max = 305.74811309814453;
+    var i;
+    var wm= new OpenLayers.Projection("EPSG:3857");
+    
+    carte = new OpenLayers.Map('map_1' 
+        ,{
+            projection: wm
+            ,units: wm.getUnits()
+            ,resolutions: ign_resolutions
+            ,maxResolution: resolution_max
+            ,maxExtent: extent_max
+            ,controls:[
+                new Geoportal.Control.TermsOfService()
+                ,new Geoportal.Control.PermanentLogo()
+                ,new OpenLayers.Control.ScaleLine()
+                ,new OpenLayers.Control.MousePosition({
+                    suffix: " m"
+                    ,separator: " m, y = "
+                    ,numDigits: 0
+                    ,emptyString: ''
+                })
+                ,new OpenLayers.Control.KeyboardDefaults()
+                ,new OpenLayers.Control.Attribution()
+                ,new OpenLayers.Control.Navigation()
+            ]
+        }
+    );
+    maMap = carte;//debug
 
-		//var coordControl = new OpenLayers.Control.MousePosition ({suffix: ' mètres', prefix:'Coordonnées x & y en Lambert2 étendu : '}, {displayProjection:'EPSG:4326' });
-		
-		this.carte = new OpenLayers.Map('map_1',options);
-		//carte.addControl(coordControl);
-		carte.addLayers([fonds, coeur, reserves]);
-		return carte;
-	};	
-	createMap('<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>');
+    var createBaseLayer = function() {
+        var i;
+        var matrixIds3857= new Array(22);
+        for (i= 0; i<22; i++) {
+            matrixIds3857[i]= {
+                identifier    : i.toString(),
+                topLeftCorner : new OpenLayers.LonLat(-20037508,20037508)
+            };
+        }
+        var l0= new Geoportal.Layer.WMTS(
+            'Cartes ign',
+            'https://gpp3-wxs.ign.fr/'+ign_api_key+'/geoportail/wmts',
+            {
+              layer: 'GEOGRAPHICALGRIDSYSTEMS.MAPS',
+              style: 'normal',
+              matrixSet: "PM",
+              matrixIds: matrixIds3857,
+              format:'image/jpeg',
+              exceptions:"text/xml"
+            },
+            {
+              tileOrigin: new OpenLayers.LonLat(0,0),
+              isBaseLayer: true,
+              maxResolution: resolution_max,
+              alwaysInRange: true,
+              opacity : 1,
+              projection: wm,
+              maxExtent: extent_max,
+              units: wm.getUnits(),
+              attribution: 'provided by IGN'
+            }
+        );
+        carte.addLayer(l0);
+    };
+    createBaseLayer();
+    carte.setCenter(centre_map, 9);
+    
+    return carte;
+}	
+	init();
 	var interventionsStyle= new OpenLayers.StyleMap({
-					"default": new OpenLayers.Style({
-						fillColor:'#8521b2',
-						fillOpacity:'0.5',
-						pointRadius:5,
-						strokeColor:'#00f',
-						strokeWidth:2,
-						graphicZIndex:1
-					}),
-					"select": new OpenLayers.Style({
-						fillColor:'#ff0',
-						fillOpacity:'0.7',
-						pointRadius: 7,
-						strokeColor:'#00f',
-						strokeWidth:3,
-						graphicZIndex:2
-					})
-				})
+        "default": new OpenLayers.Style({
+            fillColor:'#8521b2',
+            fillOpacity:'0.5',
+            pointRadius:5,
+            strokeColor:'#00f',
+            strokeWidth:2,
+            graphicZIndex:1
+        }),
+        "select": new OpenLayers.Style({
+            fillColor:'#ff0',
+            fillOpacity:'0.7',
+            pointRadius: 7,
+            strokeColor:'#00f',
+            strokeWidth:3,
+            graphicZIndex:2
+        })
+    })
 	this.interventions = new OpenLayers.Layer.Vector("interventions",{styleMap: interventionsStyle,rendererOptions: {zIndexing: true} });
 	carte.addLayer(this.interventions);	
 	var featurecollection = <?=$features;?>;
 	var geojson_format = new OpenLayers.Format.GeoJSON();
 	this.interventions.addFeatures(geojson_format.read(featurecollection));
-	carte.setCenter(new OpenLayers.LonLat(<?=$ol_x_center;?>,<?=$ol_y_center;?>),0);
+	carte.setCenter(centre_map, 9);
 
 	//---------------------------------------------gestion des popup's----------------------------------------------------
 	// Instanciation du control selectFeature
@@ -234,8 +245,6 @@ function load() {
 		carte.addPopup(popup); 
 	}
 	//----------------------------------------------fin de gestion des popup's----------------------------------------------------
-
-<? } ?>
 //]]>
 </script>
 

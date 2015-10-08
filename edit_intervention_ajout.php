@@ -10,8 +10,8 @@ else { $nbcontrev = $_POST[fnbcontrev] ;
 }
 //correction des magic_quotes_gpc (protection des chaînes de caractères)
 $observation = pg_escape_string($_POST[fobs]);
-$query= "INSERT INTO interventions.t_interventions (date, type_intervention_id, commune_id, secteur_id, coord_x, coord_y, statutzone_id, observation, nbcontrevenants, the_geom) 
-VALUES(to_date('$_POST[fdate]','dd/mm/yyyy'),'$_POST[fintervention]','$_POST[fcomm]', '$_POST[fsect]','$_POST[fx]','$_POST[fy]','$_POST[fstatut]','$observation', $nbcontrev, ST_Transform(ST_SetSrid(ST_MakePoint('$_POST[fx]', '$_POST[fy]'),4326), $wms_proj))";
+$query= "INSERT INTO interventions.t_interventions (date, type_intervention_id, commune_id, secteur_id, coord_x, coord_y, statutzone_id, observation, nbcontrevenants, the_geom_3857) 
+VALUES(to_date('$_POST[fdate]','dd/mm/yyyy'),'$_POST[fintervention]','$_POST[fcomm]', '$_POST[fsect]','$_POST[fx]','$_POST[fy]','$_POST[fstatut]','$observation', $nbcontrev, ST_Transform(ST_SetSrid(ST_MakePoint('$_POST[fx]', '$_POST[fy]'),4326), 3857))";
 	
 pg_query($query) or die( "Erreur requete" );
 
@@ -52,29 +52,15 @@ else {
 		<!-- Javascript permettant de vérifier que les champs obligatoires sont bien remplis -->
 		<script type="text/javascript" src="js/forms_verifications.js"></script> 
 		
-		<!-- Chargement des fichiers javascripts en fonction de l'outil carto choisi (GoogleMaps ou OpenLayers) -->
-		<? if ($outil_carto == "gm") { ?>
-		<script type="text/javascript" src="js/application.gm.js"></script>
-		<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<? echo $googlekeymap; ?>"></script>
-		<? } elseif ($outil_carto == "ol") { ?>
-		<script type="text/javascript" src="js/application.ol.js"></script>
-		<script type="text/javascript" src="js/openlayers/OpenLayers.js"></script>
-        <script type="text/javascript" src="conf/parametres_wms.js"></script>
-		<? } ?>
+		<!-- Chargement des fichiers javascripts de l'outil carto (OpenLayers) -->
+        <script type="text/javascript" src="js/application.ol.js"></script>
+		<script type="text/javascript" src="http://dev.openlayers.org/releases/OpenLayers-2.11/OpenLayers.js"></script>
+        <script type="text/javascript" src="http://api.ign.fr/geoportail/api/js/2.0.0/GeoportalMin.js"></script>
 		  
 	<title>Police du <? echo $etablissement_abv; ?> - Ajouter une intervention</title>
 </head>
-
-<? if ($outil_carto == "gm") { ?>
-<!-- Si l'outil carto utilisé est OpenLayers alors charger ses fonctions javascripts à l'ouverture de la page -->
-<body onload="create_gm(<?=$gm_y_center;?>,<?=$gm_x_center;?>,10,'<?=$host_url;?>','<?=$racine;?>',true)" onunload="GUnload()">
-<? } elseif ($outil_carto == "ol") { ?>
-<!-- Sinon on charge celles de GoogleMaps -->
-<body onload="create_ol.init(<?=$ol_x_center;?>,<?=$ol_y_center;?>,1,'<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',false)">
-<? } ?>
-	
+<body onload="create_ol.init(<?=$ol_x_center;?>,<?=$ol_y_center;?>,9,'<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',false)">
 	<? include "menu_general.php" ?>
-
 			<div id="news">
 				<h1>
 					<img src="images/icones/ajouter.gif" alt="Ajouter une intervention" title="Ajouter une intervention" border="0" align="absmiddle"> 

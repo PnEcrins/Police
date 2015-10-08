@@ -68,7 +68,7 @@ $query= "UPDATE interventions.t_interventions SET
 	secteur_id = '$_POST[fsect]', 
 	coord_x = '$_POST[fx]', 
 	coord_y = '$_POST[fy]', 
-	the_geom = ST_Transform(ST_SetSrid(ST_MakePoint('$_POST[fx]', '$_POST[fy]'),4326), $wms_proj),
+	the_geom_3857 = ST_Transform(ST_SetSrid(ST_MakePoint('$_POST[fx]', '$_POST[fy]'),4326), $wms_proj),
 	statutzone_id = '$_POST[fstatut]', 
 	observation = '$observation',
 	nbcontrevenants = $nbcontrev,
@@ -142,15 +142,10 @@ else {
 		<!-- Javascript permettant de vérifier que les champs obligatoires sont bien remplis -->
 		<script type="text/javascript" src="js/forms_verifications.js"></script> 
 		
-		<!-- Chargement des fichiers javascripts en fonction de l'outil carto choisi (GoogleMaps ou OpenLayers) -->
-		<? if ($outil_carto == "gm") { ?>
-			<script type="text/javascript" src="js/application.gm.js"></script>
-			<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<? echo $googlekeymap; ?>"></script>
-		<? } elseif ($outil_carto == "ol") { ?>
-			<script type="text/javascript" src="js/application.ol.js"></script>
-			<script type="text/javascript" src="js/openlayers/OpenLayers.js"></script>
-			<script type="text/javascript" src="conf/parametres_wms.js"></script>
-		<? } ?>
+		<!-- Chargement des fichiers javascripts de l'outil carto (OpenLayers) -->
+		<script type="text/javascript" src="js/application.ol.js"></script>
+		<script type="text/javascript" src="http://dev.openlayers.org/releases/OpenLayers-2.11/OpenLayers.js"></script>
+        <script type="text/javascript" src="http://api.ign.fr/geoportail/api/js/2.0.0/GeoportalMin.js"></script>
   
 	<title>Police du <? echo $etablissement_abv; ?> - Modifier une intervention</title>
 </head>
@@ -210,17 +205,8 @@ $query = "SELECT *,
 		}
 ?>
 
-<? if ($outil_carto == "gm") { ?>
-<!-- Si l'outil carto utilisé est OpenLayers alors charger ses fonctions javascripts à l'ouverture de la page -->
-	<body onload="create_gm(<?=$y;?>,<?=$x;?>,13,'<?=$host_url;?>','<?=$racine;?>',true)" onunload="GUnload()">
-<? } elseif ($outil_carto == "ol") { ?>
-<!-- Sinon on charge celles de GoogleMaps -->
-	<body onload="create_ol.init(<?=$xl2;?>,<?=$yl2;?>,'6','<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',true);">
-<? } ?>
-
-
+<body onload="create_ol.init(<?=$xl2;?>,<?=$yl2;?>,'15','<?=$wms_url;?>','<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>',true);">
 <? include "menu_general.php" ?>
-
 			<div id="news">
 				<h1>
 					<img src="images/icones/modifier.gif" alt="Modifier une intervention" title="Modifier une intervention" border="0" align="absmiddle"> 

@@ -3,6 +3,7 @@
 
 		<? include "header_front.php" ; ?>
 		<link rel="stylesheet" href="js/facebox/facebox.css" media="screen" type="text/css" />
+        <link href="http://api.ign.fr/geoportail/api/js/2.0.0/theme/geoportal/style.css" rel="stylesheet" type="text/css" media="screen" />
 		<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
 		<script type="text/javascript" src="js/facebox/facebox.js"></script>
 		<script type="text/javascript">
@@ -10,12 +11,8 @@
 		      $('a[rel*=facebox]').facebox() 
 		    })
 		</script>
-		<? if ($outil_carto == "gm") { ?>
-			<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<? echo $googlekeymap; ?>"></script>
-		<? } elseif ($outil_carto == "ol") { ?>
-			<script type="text/javascript" src="js/openlayers/OpenLayers.js"></script>
-			<script type="text/javascript" src="conf/parametres_wms.js"></script>
-		<? } ?>
+        <script type="text/javascript" src="http://dev.openlayers.org/releases/OpenLayers-2.11/OpenLayers.js"></script>
+        <script type="text/javascript" src="http://api.ign.fr/geoportail/api/js/2.0.0/GeoportalMin.js"></script>
 	<title>Police du <? echo $etablissement_abv; ?> - Localisation des interventions</title>
 </head>
 

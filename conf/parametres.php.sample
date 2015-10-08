@@ -59,8 +59,8 @@ $gm_y_center = "44.85";
 
 //URL du serveur WMS
 $wms_url = "http://mondomaine.fr/wms?";
-//Projection utilisée au format EPSG (27572 pour du lambert 2 étendu, 2154 pour du lambert 93, 4326 pour du WGS84, ...)
-$wms_proj = 27572;
+//Projection utilisée au format EPSG (3857 pour l'API geoportail, 27572 pour du lambert 2 étendu, 2154 pour du lambert 93, 4326 pour du WGS84, ...)
+$wms_proj = 3857;
 //Coordonnées du centre du territoire dans la projection définie précédemment
 $ol_x_center = 914901;
 $ol_y_center = 1986895;
