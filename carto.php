@@ -25,10 +25,15 @@
 	$fin=',"type": "Feature","properties": {}}';
 	$suffix=']}';
 	//selectionner toutes les intervantions avec leur géometries
-	$query = "SELECT *, ST_Asgeojson(ST_Transform(ST_SetSrid(ST_MakePoint(coord_x, coord_y),4326), '$wms_proj')) as geojson,to_char(date, 'dd/mm/yyyy') as dat  
+	$query = "SELECT int.id_intervention, ti.type_intervention, int.suivi_suite_donnee, ST_Asgeojson(ST_Transform(ST_SetSrid(ST_MakePoint(coord_x, coord_y),4326), '$wms_proj')) as geojson,to_char(date, 'dd/mm/yyyy') as dat  
 		FROM interventions.t_interventions int
-		LEFT JOIN interventions.bib_types_interventions typ ON typ.id_type_intervention = int.type_intervention_id 
-        $where" ;
+		LEFT JOIN layers.l_communes com ON com.id_commune = int.commune_id
+        LEFT JOIN layers.l_secteurs sect ON sect.id_sect = int.secteur_id
+        LEFT JOIN interventions.cor_interventions_infractions cor ON cor.intervention_id = int.id_intervention
+        LEFT JOIN interventions.cor_interventions_agents ag ON ag.intervention_id = int.id_intervention
+        LEFT JOIN interventions.bib_types_interventions ti ON ti.id_type_intervention = int.type_intervention_id 
+        $where
+        GROUP BY int.id_intervention,int.coord_x, int.coord_y, int.date, int.suivi_suite_donnee, ti.type_intervention" ;
 		// WHERE extract(year from int.date)= '$cartoannee'" ; 
 		$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
 	//bouble sur les interventions
