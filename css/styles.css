@@ -19,6 +19,11 @@ body{
 	color: #d01818;
 }
 
+.success{
+	font-weight: bold;
+	color: green;
+}
+
 .droite{
 	text-align: right;
 }

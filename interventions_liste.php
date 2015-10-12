@@ -1,5 +1,18 @@
 <? include "verification.php" ?>
 <? include "header_front.php" ?>
+<? 
+//vérification de la saisie d'un agent depuis edit_intervention_agent_ajout.php
+if(isset($_GET['id'])){
+    $idintervention = $_GET['id'];
+    $queryverif= "SELECT intervention_id FROM interventions.cor_interventions_agents WHERE intervention_id=$idintervention";
+    $resultverif = pg_query($queryverif) or die( "Erreur requete" );
+    $verif = pg_numrows($resultverif);						
+    if ($verif < 1){
+        header("Location: edit_intervention_agent_ajout.php?id=$idintervention&message=2");
+    }
+    else{$message = "L'infraction N°".$idintervention." a été ajoutée avec succès";}
+}
+?>
 		<link rel="stylesheet" href="js/facebox/facebox.css" media="screen" type="text/css" />
 		<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
 		<script type="text/javascript" src="js/facebox/facebox.js"></script>
@@ -49,8 +62,17 @@ $total = pg_numrows($qtotal);
 	//Compter le nombre d'enregistrements renvoyés par la requete
 	$nombreint = pg_numrows($resultcompte);
 ?>
-
-			<div id="news">
+            <? if ($message)
+			{?>
+                <div id="message">
+                    <h3 class="success">
+                        <? echo $message;?>
+                    </h3>
+                </div>
+			<?}?>
+			
+            
+            <div id="news">
 				<h1>
 					Liste des interventions (<? echo "$nombreint"?>)
 				</h1>

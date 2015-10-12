@@ -1,6 +1,6 @@
 <? include "verification.php" ?>
 <?php
-//if ($_POST['Submit'] == "OK")
+
 if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 {
 	$idinterv = $_POST[finterv];
@@ -34,13 +34,13 @@ if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 <? $idinterv = $_GET[id]; ?>
 <? include "menu_general.php" ?>
 <?
-//Declarer la requete listant les enregistrements de la table ‡ lister,
+//Declarer la requete listant les enregistrements de la table √† lister,
 $query1 = "SELECT id_intervention, date, commune FROM interventions.t_interventions
 LEFT JOIN layers.l_communes ON id_commune = commune_id
 WHERE id_intervention = '$idinterv'";
 //Executer la requete
-$result1 = pg_query($query1) or die ('…chec requÍte : ' . pg_last_error()) ;
-//Compter le nombre d'enregistrements renvoyÈs par la requete
+$result1 = pg_query($query1) or die ('√âchec requ√™te : ' . pg_last_error()) ;
+//Compter le nombre d'enregistrements renvoy√©s par la requete
 $val1 = pg_fetch_assoc($result1);
 $idint = $val1['id_intervention'];
 $date = $val1['date'];
@@ -61,14 +61,14 @@ LEFT JOIN interventions.bib_infractions ON id_infraction = infraction_id
 LEFT JOIN interventions.bib_qualification ON id_qualification = qualification_id
 WHERE id_intervention = '$idinterv'";
 //Executer la requete
-$result = pg_query($query) or die ('…chec requÍte : ' . pg_last_error()) ;
-//Compter le nombre d'enregistrements renvoyÈs par la requete
+$result = pg_query($query) or die ('√âchec requ√™te : ' . pg_last_error()) ;
+//Compter le nombre d'enregistrements renvoy√©s par la requete
 $nombreinfr = pg_numrows($result);
 ?>	
 			
 			
 <div id="liste">
-		    Etape 1 - Renseignements g&eacute;n&eacute;raux | <b>ETAPE 2 - INFRACTIONS</b> | Etape 3 - Agents
+		    Etape 1 - Renseignements g√©n√©raux | <b>ETAPE 2 - INFRACTIONS</b> | Etape 3 - Agents
 			<hr color="#dcdcdc" > 
 			<table width="800px" border="0" cellspacing="5px" cellpadding="5px" align="center">
 		        <?  if ($nombreinfr > 0){ ?>
@@ -90,7 +90,7 @@ $nombreinfr = pg_numrows($result);
 					<? } ?>
 				<? }else{ ?>
 					<tr>
-						<td height="40" colspan="2" class="commentaire">Plusieurs infractions peuvent &ecirc;tre renseign&eacute;es pour une m&ecirc;me intervention</td>
+						<td height="40" colspan="2" class="commentaire">Plusieurs infractions peuvent √™tre renseign√©es pour une m√™me intervention</td>
 					</tr>
 				<? } ?>
 			
@@ -107,14 +107,14 @@ $nombreinfr = pg_numrows($result);
 						<select name="finfr">
 							<option value="">...</option>
 								<?
-									//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÈe pour renseigner la liste dÈroulante
+									//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire li√©e pour renseigner la liste d√©roulante
 									$sql_infr = "SELECT id_infraction, infraction
 									FROM interventions.bib_infractions
 									ORDER BY infraction";
-									$result = pg_query($sql_infr) or die ("Erreur requÍte") ;
+									$result = pg_query($sql_infr) or die ("Erreur requ√™te") ;
 									while ($val = pg_fetch_assoc($result)){
 								?>
-								<!--  Stocker l'id correspondant ‡ la valeur selectionnÈe. -->
+								<!--  Stocker l'id correspondant √† la valeur selectionn√©e. -->
 							<option value="<?=$val['id_infraction'];?>"><?=$val['infraction']?></option>
 								<? } ?>
 						</select>		
@@ -126,14 +126,14 @@ $nombreinfr = pg_numrows($result);
 						<select name="fqual">
 							<option value="">...</option>
 								<?
-									//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire liÈe pour renseigner la liste dÈroulante
+									//Declarer et executer une requete permettant de lister les enregistrements d'une table secondaire li√©e pour renseigner la liste d√©roulante
 									$sql_infr = "SELECT id_qualification, qualification
 									FROM interventions.bib_qualification
 									ORDER BY qualification";
-									$result = pg_query($sql_infr) or die ("Erreur requÍte") ;
+									$result = pg_query($sql_infr) or die ("Erreur requ√™te") ;
 									while ($val = pg_fetch_assoc($result)){
 								?>
-								<!--  Stocker l'id correspondant ‡ la valeur selectionnÈe. -->
+								<!--  Stocker l'id correspondant √† la valeur selectionn√©e. -->
 							<option value="<?=$val['id_qualification'];?>"><?=$val['qualification']?></option>
 								<? } ?>
 						</select>
@@ -144,7 +144,13 @@ $nombreinfr = pg_numrows($result);
 				if ($message == '1')
 				{?>
 				<tr>
-					<td colspan = "2" class="alerte">Attention ! Doublon, cette infraction a d&eacute;j&agrave; &eacute;t&eacute; ajout&eacute;e.</td>
+					<td colspan = "2" class="alerte">Attention ! Doublon, cette infraction a d√©j√† √©t√© ajout√©e.</td>
+				</tr>
+				<?}
+                if ($message == '2')
+				{?>
+				<tr>
+					<td colspan = "2" class="alerte">Attention ! Vous devez saisir au moins une infraction.</td>
 				</tr>
 				<?}
 				?>

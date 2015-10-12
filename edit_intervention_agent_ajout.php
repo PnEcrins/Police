@@ -1,6 +1,15 @@
 <? include "verification.php" ?>
 <?php
-//if ($_POST['Submit'] == "OK")
+if(isset($_GET['id'])){
+    $idintervention = $_GET['id'];
+    $queryverif= "SELECT intervention_id FROM interventions.cor_interventions_infractions WHERE intervention_id=$idintervention";
+    $resultverif = pg_query($queryverif) or die( "Erreur requete" );
+    $verif = pg_numrows($resultverif);						
+    if ($verif < 1){
+        header("Location: edit_intervention_infraction_ajout.php?id=$idintervention&message=2");
+    }
+}
+
 if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 {
 	$idinterv = $_POST[finterv];
@@ -34,13 +43,13 @@ if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 <? $idinterv = $_GET[id]; ?>
 <? include "menu_general.php" ?>
 <?
-//Declarer la requete listant les enregistrements de la table à lister,
+//Declarer la requete listant les enregistrements de la table Ã  lister,
 $query1 = "SELECT id_intervention, date, commune FROM interventions.t_interventions
 LEFT JOIN layers.l_communes ON id_commune = commune_id
 WHERE id_intervention = '$idinterv'";
 //Executer la requete
-$result1 = pg_query($query1) or die ('Échec requête : ' . pg_last_error()) ;
-//Compter le nombre d'enregistrements renvoyés par la requete
+$result1 = pg_query($query1) or die ('Ã‰chec requÃªte : ' . pg_last_error()) ;
+//Compter le nombre d'enregistrements renvoyÃ©s par la requete
 $val1 = pg_fetch_assoc($result1);
 $idint = $val1['id_intervention'];
 $date = $val1['date'];
@@ -63,8 +72,8 @@ JOIN utilisateurs.t_roles u ON u.id_role = cia.utilisateur_id
 WHERE i.id_intervention = '$idinterv'
 ORDER BY u.nom_role";
 //Executer la requete
-$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
-//Compter le nombre d'enregistrements renvoyés par la requete
+$result = pg_query($query) or die ('Ã‰chec requÃªte : ' . pg_last_error()) ;
+//Compter le nombre d'enregistrements renvoyÃ©s par la requete
 $nombreagent = pg_numrows($result);	
 ?>		
 			
@@ -123,7 +132,7 @@ $nombreagent = pg_numrows($result);
                                                         )
                                                     ) a
                                                     ORDER BY a.nom_role";
-									$result = pg_query($sql_agent) or die ("Erreur requête") ;
+									$result = pg_query($sql_agent) or die ("Erreur requÃªte") ;
 									while ($val = pg_fetch_assoc($result)){
 								?>
 							<option value="<?=$val['id_utilisateur'];?>"><?=$val['nom_role'].' '.' '.$val['prenom_role'];?></option>
@@ -139,6 +148,12 @@ $nombreagent = pg_numrows($result);
 					<td colspan = "2" class="alerte">Attention ! Doublon, cet agent a d&eacute;j&agrave; &eacute;t&eacute; ajout&eacute;.</td>
 				</tr>
 				<?}
+                if ($message == '2')
+				{?>
+				<tr>
+					<td colspan = "2" class="alerte">Attention ! Vous devez saisir au moins un agent.</td>
+				</tr>
+				<?}
 				?>
 				<tr>
 					<td></td>
@@ -148,7 +163,7 @@ $nombreagent = pg_numrows($result);
 				</tr>
 				<tr>
 					<td align="right" colspan="2">
-						<a href="interventions_liste.php"><img src="images/icones/suivant.gif" alt="Terminer" title="Terminer" border="0" align="absmiddle"> Terminer</a>
+						<a href="interventions_liste.php?id=<? echo $idintervention?>"><img src="images/icones/suivant.gif" alt="Terminer" title="Terminer" border="0" align="absmiddle"> Terminer</a>
 					</td>
 				</tr>
 				</form>
