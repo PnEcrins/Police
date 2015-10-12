@@ -7,9 +7,7 @@ Les valeurs x et y en WGS84 seront ensuite mises à jour dans la BD PostgreSQL -
 	</div>
 	<div style="margin: 0 auto; width: 800px">
 		<p class="commentaire">
-			1 - Placez approximativement le marqueur à l'aide de la souris. <br>
-			2 - Déplacez vous et zoomez (à l'aide des outils en haut à gauche ou grace à la molette de la souris) pour vous localiser plus précisément. <br>
-			3 - Ajustez la position du marqueur.
+			Recliquez sur la carte pour modifier la localisation de l'intervention.
 		</p>
 		<hr color="#dcdcdc" > 
 		<p>
