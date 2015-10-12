@@ -11,11 +11,11 @@ Les valeurs x et y en WGS84 seront ensuite mises à jour dans la BD PostgreSQL -
 		</p>
 		<hr color="#dcdcdc" > 
 		<p>
-			Coordonnées du marqueur : <br>
-			<span class="commentaire">
-				X : <input id="longEnd" value="<? echo $x; ?>" maxlength="30" type="text" name="fx" readonly="true" class="commentaire" style="border:0px" > - déterminé selon la position du marqueur<br>
-				Y : <input id="latEnd" value="<? echo $y; ?>" maxlength="30" type="text" name="fy" readonly="true" class="commentaire" style="border:0px"> - déterminé selon la position du marqueur</span/>
-			</span>
+            Coordonnées du marqueur (WGS84) : <br>
+            X : <input id="longEnd" type="text" name="fx" onChange="create_ol.putPoint('<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>');">
+                <span id="commentairex" class="commentaire"> - Saisir vos coordonnées en degrés décimaux (exemple : 6.29571)</span/><br>
+            Y : <input id="latEnd" type="text" name="fy" onChange="create_ol.putPoint('<?=$wms_proj;?>','<?=$min_x;?>','<?=$min_y;?>','<?=$max_x;?>','<?=$max_y;?>');">
+                <span id="commentairey" class="commentaire"> - Saisir vos coordonnées en degrés décimaux</span/>
 		</p>
 		<p>
 			<span class="colbord">Commune : </span>
