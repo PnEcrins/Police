@@ -19,10 +19,10 @@ header("Location: edit_intervention_modif.php?id=$idinterv");
 		<? 
 			$idinterv = $_GET[idint];
 			$idagent = $_GET[idagent];
-			$sqlinfr = "SELECT intervention_id, utilisateur_id, prenom_role, nom_role
-						FROM interventions.cor_interventions_agents
-						LEFT JOIN interventions.vue_agents ON id_role = utilisateur_id
-						WHERE intervention_id = $idinterv AND utilisateur_id = $idagent";
+			$sqlinfr = "SELECT cia.intervention_id, cia.utilisateur_id, u.prenom_role, u.nom_role
+                        FROM interventions.cor_interventions_agents cia
+                        LEFT JOIN utilisateurs.t_roles u ON u.id_role = cia.utilisateur_id
+						WHERE cia.intervention_id = $idinterv AND cia.utilisateur_id = $idagent";
 						$result = pg_query($sqlinfr) or die ("Erreur requête") ;
 						$val = pg_fetch_assoc($result);
 						$agent = $val['nom_role'].' '.$val['prenom_role'];

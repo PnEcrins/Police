@@ -103,7 +103,7 @@
 	<hr color="#dcdcdc" > 
 	<p>
 		<?
-			$query = "SELECT i.id_intervention, u.nom_role AS nomutilisateur, u.prenom_role AS prenomutilisateur 
+			$query = "SELECT i.id_intervention, u.nom_role, u.prenom_role 
             FROM interventions.t_interventions i
 			JOIN interventions.cor_interventions_agents cia ON cia.intervention_id = i.id_intervention
 			JOIN utilisateurs.t_roles u ON u.id_role = cia.utilisateur_id
