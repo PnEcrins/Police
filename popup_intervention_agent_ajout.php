@@ -40,9 +40,23 @@ if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 						<select name="fagent" >
 							<option value="">...</option>
 								<?
-									$sql_agent = "SELECT id_role, nom_role, prenom_role
-									FROM interventions.vue_agents
-									ORDER BY nom_role";
+									$sql_agent = "
+                                        SELECT a.* FROM 
+                                            (
+                                                (SELECT u.id_role AS id_utilisateur, u.nom_role, u.prenom_role
+                                                FROM utilisateurs.t_roles u
+                                                JOIN utilisateurs.cor_roles g ON g.id_role_utilisateur = u.id_role
+                                                JOIN utilisateurs.cor_role_menu crm ON crm.id_role = g.id_role_groupe
+                                                WHERE crm.id_menu = $id_menu)
+                                                UNION
+                                                (SELECT u.id_role AS id_utilisateur, u.nom_role, u.prenom_role
+                                                FROM utilisateurs.t_roles u
+                                                JOIN utilisateurs.cor_role_menu crm ON crm.id_role = u.id_role
+                                                WHERE crm.id_menu = $id_menu
+                                                AND u.groupe = false
+                                                )
+                                            ) a
+                                        ORDER BY a.nom_role";
 									$result = pg_query($sql_agent) or die ("Erreur requête") ;
 									while ($val = pg_fetch_assoc($result)){
 								?>
