@@ -2,7 +2,6 @@
 <!-- <div id="bannertop"></div> -->
 
 <?
-$an = date("Y");
 require("conf/parametres.php");
 ?>
 
@@ -52,7 +51,7 @@ require("conf/parametres.php");
 		<ul>
 			<li><a href="<?= $racine; ?>accueil.php" class="rouge">Accueil</a></li>
 			<li><a href="<?= $racine; ?>interventions_liste.php" class="orange">Interventions</a></li>
-			<li><a href="<?= $racine; ?>carto.php?an=<? echo "$an" ?>" class="rouge">Carto</a></li>
+			<li><a href="<?= $racine; ?>carto.php" class="rouge">Carto</a></li>
 			<? if ($acces_documents == "oui"){ ?>
             <li><a href="<?= $racine; ?>documents_liste.php" class="orange">Documents</a></li>
             <? } ?>
