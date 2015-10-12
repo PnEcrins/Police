@@ -117,6 +117,7 @@ var createMap = function() {
         carte.addLayer(l0);
     };
     createBaseLayer();
+    
     carte.setCenter(new OpenLayers.LonLat(center_x, center_y), 15);
     
     return carte;

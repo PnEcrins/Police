@@ -6,53 +6,7 @@ Positionne un marqueur à l'emplacement de chaque intervention de l'année selec
 	
 <script type="text/javascript">
 //<![CDATA[
-<?
-
-	$prefix = '{"type": "FeatureCollection","features":['; 
-	$debut='{"geometry":';
-	$fin=',"type": "Feature","properties": {}}';
-	$suffix=']}';
-	//selectionner toutes les intervantions avec leur géometries
-	$query = "SELECT *, ST_Asgeojson(ST_Transform(ST_SetSrid(ST_MakePoint(coord_x, coord_y),4326), '$wms_proj')) as geojson,to_char(date, 'dd/mm/yyyy') as dat  
-		FROM interventions.t_interventions int
-		LEFT JOIN interventions.bib_types_interventions typ ON typ.id_type_intervention = int.type_intervention_id 
-        $where" ;
-		// WHERE extract(year from int.date)= '$cartoannee'" ; 
-		$result = pg_query($query) or die ('Échec requête : ' . pg_last_error()) ;
-	//bouble sur les interventions
-	while ($val = pg_fetch_assoc($result)){
-		$compt++;
-		$date = $val['dat'];
-		$typeintervention = $val['type_intervention'];
-		if ($val['suivi_suite_donnee'] =="") { $suivi_suite = "Non renseigné"; } 
-		else { $suivi_suite = "Oui, voir détails"; }
-		$xx = $val['coord_x'];
-		$yy = $val['coord_y'];
-		$idint = $val['id_intervention'];
-		// Declarer la requete permettant d'afficher la ou les infractions des infractions cartographiees en plus de la date
-		$queryinfr = "SELECT id_intervention, infraction, infraction_id FROM interventions.t_interventions
-		LEFT JOIN interventions.cor_interventions_infractions ON intervention_id = id_intervention
-		LEFT JOIN interventions.bib_infractions ON id_infraction = infraction_id
-		WHERE id_intervention = '$idint'
-		ORDER BY infraction_id";
-		//Executer la requete
-		$resultinfr = pg_query($queryinfr) or die ('Échec requête : ' . pg_last_error()) ;
-		$nb = pg_numrows($result);
-		$c=0;$virg="";$infractions = "";
-		//boucle 2 sur laou les infractions de chaque intervention
-		while ($val1 = pg_fetch_assoc($resultinfr)) {
-			$c++;
-			$inf = $val1['infraction'];
-			if ($c!=1){$virg = ", ";}
-			$infractions = $infractions.$virg.$inf;
-		}
-		$fin=',"type": "feature","id": '.$idint.',"properties": {"date": "'.$date.'","id_intervention":'.$idint.',"typeintervention": "'.$typeintervention.'","suivi_suite_donnee": "'.$suivi_suite.'","infractions": "'.$infractions.'"}}';
-		$str = $debut.$val['geojson'].$fin;
-		if ($compt >1){$virgule = ",";}
-		$geojson = $geojson.$virgule.$str;
-	}
-	$features = $prefix.$geojson.$suffix;
-?>
+features = <? echo $features; ?>;
 var carte;
 if (window.__Geoportal$timer===undefined) {
     var __Geoportal$timer= null;
@@ -166,6 +120,7 @@ var createMap = function() {
         carte.addLayer(l0);
     };
     createBaseLayer();
+    
     carte.setCenter(new OpenLayers.LonLat(center_x, center_y), 9);
     
     return carte;
@@ -191,7 +146,7 @@ var createMap = function() {
     })
 	this.interventions = new OpenLayers.Layer.Vector("interventions",{styleMap: interventionsStyle,rendererOptions: {zIndexing: true} });
 	carte.addLayer(this.interventions);	
-	var featurecollection = <?=$features;?>;
+	var featurecollection = features;
 	var geojson_format = new OpenLayers.Format.GeoJSON();
 	this.interventions.addFeatures(geojson_format.read(featurecollection));
 	carte.setCenter(new OpenLayers.LonLat(center_x, center_y), 9);

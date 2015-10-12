@@ -12,6 +12,7 @@ $statut = $_POST["rstatut"];
 //construction de la clause where pour la recherche multicritères
 // sur l'annee
 if ($date != null){
+    $year = $date;
 	$where = "Where extract(year from date) = '$date'";
 }
 // sur le numero

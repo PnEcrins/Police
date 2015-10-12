@@ -13,7 +13,7 @@ $source = $_GET['from']
 
 			<div id="filtre">
                 <?php if($source == 'carte') { ?>
-					<form action = "carto.php" method = "POST" name = "carto">
+					<form action = "carto.php?search=true" method = "POST" name = "carto">
                 <?php } else { ?>
 					<form action = "intervention_recherche_resultat.php" method = "POST" name = "rechinfr">
                 <?php } ?>
