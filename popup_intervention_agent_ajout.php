@@ -1,6 +1,6 @@
 <? include "verification.php" ?>
 <?php
-//if ($_POST['Submit'] == "OK")
+
 if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 {
 	$idinterv = $_POST[finterv];
@@ -43,7 +43,7 @@ if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
 									$sql_agent = "
                                         SELECT a.* FROM 
                                             (
-                                                (SELECT u.id_role AS id_utilisateur, u.nom_role, u.prenom_role
+                                                (SELECT u.id_role, u.nom_role, u.prenom_role
                                                 FROM utilisateurs.t_roles u
                                                 JOIN utilisateurs.cor_roles g ON g.id_role_utilisateur = u.id_role
                                                 JOIN utilisateurs.cor_role_menu crm ON crm.id_role = g.id_role_groupe
