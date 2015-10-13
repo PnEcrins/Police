@@ -23,13 +23,13 @@ Il est possible de faire l'installation de l'application sur un serveur existant
         sudo adduser --home /home/police police
 
 
-* récupérer le zip de l'application sur le Github du projet
+* Récupérer le zip de l’application sur le Github du projet (X.Y.Z à remplacer par le numéro de version souhaité) et dézippez le dans le répertoire de l’utilisateur linux :
 
     ::
     
         cd /tmp
-        wget https://github.com/PnEcrins/Police/archive/master.zip
-        unzip master.zip
+        wget https://github.com/PnEcrins/Police/archive/vX.Y.Z.zip
+        vX.Y.Z.zip
         cp -R Police-master /home/police/Police
         cd /home/police
 
