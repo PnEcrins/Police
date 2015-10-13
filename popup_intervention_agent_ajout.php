@@ -49,7 +49,7 @@ if (isset($_POST['Submit']) || isset($_POST['Submit_x']))
                                                 JOIN utilisateurs.cor_role_menu crm ON crm.id_role = g.id_role_groupe
                                                 WHERE crm.id_menu = $id_menu)
                                                 UNION
-                                                (SELECT u.id_role AS id_utilisateur, u.nom_role, u.prenom_role
+                                                (SELECT u.id_role, u.nom_role, u.prenom_role
                                                 FROM utilisateurs.t_roles u
                                                 JOIN utilisateurs.cor_role_menu crm ON crm.id_role = u.id_role
                                                 WHERE crm.id_menu = $id_menu
