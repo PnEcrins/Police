@@ -10,12 +10,12 @@ CHANGELOG
 
 **Corrections de bugs**
 
-* Ajout des triggers permettant de renseigner automatiquement la date de création et la date de mise à joru d'une intervention.
+* Ajout des triggers permettant de renseigner automatiquement la date de création et la date de mise à jour d'une intervention.
 * Ajout d'un agent présent lors d'une intervention en mode modification
 
 **Documentation**
 
-* L'installation indique désormais de télécharger une version de l'applicatino et non le master.
+* L'installation indique désormais de télécharger une version de l'application et non le master.
 
 
 2.3.0 (2015-10-13)
