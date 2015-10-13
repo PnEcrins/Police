@@ -635,6 +635,70 @@ ALTER SEQUENCE t_menus_id_menu_seq OWNED BY t_menus.id_menu;
 SET search_path = interventions, pg_catalog;
 
 --
+-- Name: insert_intervention; Type: FUNCTION; Schema: interventions; Owner: policeuser
+--
+
+CREATE OR REPLACE FUNCTION insert_intervention()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+------ gestion de la date insert, la date update prend aussi comme valeur cette premiere date insert
+	IF new.date_insert IS NULL THEN 
+		new.date_insert='now';
+	END IF;
+	IF new.date_update IS NULL THEN
+		new.date_update='now';
+	END IF;
+return new; 
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+
+ALTER FUNCTION insert_intervention() OWNER TO policeuser;
+
+
+--
+-- Name: update_intervention; Type: FUNCTION; Schema: interventions; Owner: policeuser
+--
+
+CREATE OR REPLACE FUNCTION update_intervention()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+------ gestion de la la date update
+		new.date_update='now';
+return new; 
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+
+ALTER FUNCTION update_intervention() OWNER TO policeuser;
+
+
+--
+-- Name: tri_insert_date; Type: TRIGGER; Schema: interventions; Owner: policeuser
+--
+
+CREATE TRIGGER tri_insert_date
+  BEFORE INSERT
+  ON t_interventions
+  FOR EACH ROW
+  EXECUTE PROCEDURE insert_intervention();
+
+
+--
+-- Name: tri_update_date; Type: TRIGGER; Schema: interventions; Owner: policeuser
+--
+
+CREATE TRIGGER tri_update_date
+  BEFORE UPDATE
+  ON t_interventions
+  FOR EACH ROW
+  EXECUTE PROCEDURE update_intervention();
+
+--
 -- Name: id_qualification; Type: DEFAULT; Schema: interventions; Owner: policeuser
 --
 
@@ -1147,6 +1211,24 @@ GRANT ALL ON TABLE cor_interventions_infractions TO policeuser;
 REVOKE ALL ON TABLE t_interventions FROM PUBLIC;
 REVOKE ALL ON TABLE t_interventions FROM policeuser;
 GRANT ALL ON TABLE t_interventions TO policeuser;
+
+
+--
+-- Name: insert_intervention; Type: ACL; Schema: interventions; Owner: policeuser
+--
+
+REVOKE ALL ON FUNCTION insert_intervention() FROM public;
+REVOKE ALL ON FUNCTION insert_intervention() FROM policeuser;
+GRANT EXECUTE ON FUNCTION insert_intervention() TO policeuser;
+
+
+--
+-- Name: update_intervention; Type: ACL; Schema: interventions; Owner: policeuser
+--
+
+REVOKE ALL ON FUNCTION update_intervention() FROM public;
+REVOKE ALL ON FUNCTION update_intervention() FROM policeuser;
+GRANT EXECUTE ON FUNCTION update_intervention() TO policeuser;
 
 
 SET search_path = utilisateurs, pg_catalog;
