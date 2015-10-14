@@ -23,7 +23,7 @@ Il est possible de faire l'installation de l'application sur un serveur existant
         sudo adduser --home /home/police police
 
 
-* Récupérer le zip de l’application sur le Github du projet (`X.Y.Z à remplacer par le numéro de version souhaité <https://github.com/mPnEcrins/Police/releases>`_), dézippez le dans le répertoire ``tmp`` du serveur puis copiez le dans le répertoire de l’utilisateur linux :
+* Récupérer le zip de l’application sur le Github du projet (`X.Y.Z à remplacer par le numéro de version souhaité <https://github.com/PnEcrins/Police/releases>`_), dézippez le dans le répertoire ``tmp`` du serveur puis copiez le dans le répertoire de l’utilisateur linux :
 
     ::
     
