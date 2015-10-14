@@ -60,6 +60,7 @@ Après mise à jour :
 **Changements**
 
 * Amélioration du pointage CARTO. Il n'y a plus maintenant un point par défaut au milieu de la carte que l'on doit déplacer mais un fonctionnement plus classique. On se localise sur la zone de l'intervention et on clique pour positionner celle-ci. Si je reclique ailleurs, cela déplace le point à ce nouvel emplacement.
+.. image :: img/police-saisie-2-2.gif
 * Saisie des coordonnées. Au lieu de localiser l'intervention sur la carte, on peut directement saisir les coordonnées X et Y (en WGS84). L'application vérifie que les coordonnées saisies sont bien dans l'étendue globale du territoire définie dans les paramètres.
 * Les agents ne peuvent désormais modifier QUE les interventions pour lesquelles ils étaient présents.
 * Ajout des champs ``DATE AUDIENCE`` et ``APPEL AVOCAT`` (dans les formulaire d'ajout/modification, dans les fiches de visualisation d'une intervention et dans les export XLS).
