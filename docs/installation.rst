@@ -25,7 +25,7 @@ ATTENTION : Les valeurs renseignées dans ce fichier sont utilisées par le scri
 Création de la base de données
 ==============================
 
-* Création automatisée de la base de données (``data/policedb.sql``) et chargement des données initiales (``data/policedb_data.sql`` et (``policedb_data_sig_pne.sql``) :
+* Création automatisée de la base de données (``data/policedb.sql``) et chargement des données initiales (``data/policedb_data.sql`` et ``policedb_data_sig_pne.sql``) :
 
     ::
     
@@ -86,6 +86,7 @@ Les différentes versions sont disponibles sur le Github du projet (https://gith
 
 .. code-block:: bash
 
+    cd /home/police/
     wget https://github.com/PnEcrins/Police/archive/vX.Y.Z.zip
     unzip vX.Y.Z.zip
     cd Police-X.Y.Z/
