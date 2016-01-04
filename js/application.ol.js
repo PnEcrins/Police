@@ -282,6 +282,11 @@ create_ol = function(xCentre,yCentre,zoom,wmsUrl,wmsProj,minX,minY,maxX,maxY,mar
             }
             //centrer la carte avec le bon niveau de zoom
             carte.setCenter(new OpenLayers.LonLat(xCentre,yCentre),zoom,false,true);
+            //rendre possible la saisie des caractère + et - qui sont sinon dédiés à la navigation dans la carte
+            carte.events.on(
+                {"mouseover":function(control){carte.getControlsByClass('OpenLayers.Control.KeyboardDefaults')[0].activate();}
+                ,"mouseout":function(control){carte.getControlsByClass('OpenLayers.Control.KeyboardDefaults')[0].deactivate();}
+            });
 		}
         ,putPoint: function(wms_proj,minX,minY,maxX,maxY){
             var proj_appli = new OpenLayers.Projection("EPSG:"+wms_proj);

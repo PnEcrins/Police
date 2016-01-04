@@ -12,7 +12,7 @@
 		    })
 		</script>
         <script type="text/javascript" src="conf/conf_carto.js"></script>
-        <script type="text/javascript" src="http://dev.openlayers.org/releases/OpenLayers-2.11/OpenLayers.js"></script>
+        <script type="text/javascript" src="js/openlayers/OpenLayers.js"></script>
         <script type="text/javascript" src="http://api.ign.fr/geoportail/api/js/2.0.0/GeoportalMin.js"></script>
 	<title>Police du <? echo $etablissement_abv; ?> - Localisation des interventions</title>
 </head>
